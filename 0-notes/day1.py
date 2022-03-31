@@ -5,10 +5,14 @@ Analysis of Algos
 - Use big O notation to measure the running time
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 * How to measure the algo?
 =======
 * How to measure the algo?1
 >>>>>>> First commit
+=======
+* How to measure the algo?
+>>>>>>> Cleaning up files
 - Measure input in repsct to the input size
 - Measure the operations, not the running time
 
