@@ -50,7 +50,16 @@ def reverse(l):
     >>> l
     [5, 4, 3, 2, 1]
     """
-    pass
+    temp = 0
+    #what?????
+   # for i in range (len(l)):
+   #     temp = l[(len(l))-i]
+   #     l[(len(l))-i] = l[i]
+   #     l[i] = temp
+   #     print(f"{l[i]}")
+
+
+    return l
 
 ############################################################################
 #
