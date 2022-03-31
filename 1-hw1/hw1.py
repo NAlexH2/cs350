@@ -11,7 +11,7 @@
 # Find the largest two elements in a list.
 # Return your answer in a tuple as (largest, secondLargest)
 #
-# Running Time: 
+# Running Time: O(n)
 ############################################################################
 def largest2(l):
     """
@@ -20,21 +20,16 @@ def largest2(l):
     >>> largest2([7, 6, 5, 4, 3, 2, 1])
     (7, 6)
     """
-    #try something along the lines of...
-    #first = 0
-    #second = 0
-    #for i in range(len(l))
-    #  TODO assign to first then second as long as second is less than first
-    # use ifs to perform this comparison. It's easy then 99% certain! 
-    caught_nums = [0,0]
-    print(f"{l[len(l)]}")
-    for i in range(len(l)):
-            if l[i] > caught_nums[0]:
-                caught_nums[0] = l[i]
-                print(f"{caught_nums[0]}")
-            elif l[i] > caught_nums[1] and l[i] < l[len(l)]:
-                caught_nums[1] = l[i]
-                print(f"{caught_nums[1]}")
+    first = 0
+    second = 0
+    #(n*1)+(n*1) -> O(n)
+    for i in range(len(l)): #O(n)
+        if l[i] > first: #O(1)
+            first = l[i] #O(1)
+    for i in range(len(l)): #O(n)
+        if l[i] > second and l[i] is not first: #O(1)
+            second = l[i] #O(1)
+    caught_nums = (first, second)
 
     return caught_nums
 
