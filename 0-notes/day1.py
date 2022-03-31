@@ -4,7 +4,11 @@ Day 1 notes
 Analysis of Algos
 - Use big O notation to measure the running time
 
+<<<<<<< HEAD
 * How to measure the algo?
+=======
+* How to measure the algo?1
+>>>>>>> First commit
 - Measure input in repsct to the input size
 - Measure the operations, not the running time
 
