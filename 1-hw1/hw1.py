@@ -248,8 +248,6 @@ def wordSearch(word,grid):
            if i < len(word) and word[i] is grid[i][j]: #O(1)
                matched += grid[i][j] #O(1)
     
-    print(matched)
-
     if matched == word: #O(1)
         return True 
         
