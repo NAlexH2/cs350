@@ -85,6 +85,9 @@ def transpose(m):
     >>> transpose(m)
     [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
     """
+    # These must be commented out due to not transposing in place
+    # >>> m
+    # [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
     p = [] #O(1)
     for i in range(len(m)):#O(n)
         p.append([0] * len(m))#O(1)
