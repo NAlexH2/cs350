@@ -6,10 +6,10 @@
 # This homework is largely review, and to make sure you have a working version of python.
 
 from distutils.command.build_scripts import first_line_re
-import math
+
 
 from attr import NOTHING
-
+import math
 
 ############################################################################
 #
@@ -280,7 +280,7 @@ def wordSearch(word,grid):
 #  /   \
 # *-----*
 #
-# Running Time: 
+# Running Time: O(n)
 ############################################################################
 
 def convexHull(points):
@@ -290,17 +290,17 @@ def convexHull(points):
     """
     actual = []
 
-    for i in range(len(points)):
-        (x1, y1) = points[i]
-        if i != len(points)-1:
-            (x2, y2) = points[i+1]
-        elif i == len(points)-1:
-            (x2, y2) = points[0]
-        a = y2 - y1
-        b = x1 - x2
-        c = (x1*y2) - (x2*y1)
-        if c < (a*1+b*1) or c == (a*1+b*1):
-            actual.append((x1,y1))
+    for i in range(len(points)): #O(n)
+        (x1, y1) = points[i] #O(1)
+        if i != len(points)-1: #O(1)
+            (x2, y2) = points[i+1] #O(1)
+        elif i == len(points)-1: #O(1)
+            (x2, y2) = points[0] #O(1)
+        a = y2 - y1 #O(1)
+        b = x1 - x2 #O(1)
+        c = (x1*y2) - (x2*y1) #O(1)
+        if c < (a*1+b*1) or c == (a*1+b*1): #O(1)
+            actual.append((x1,y1)) #O(1)
 
     
     return actual
@@ -313,10 +313,19 @@ def convexHull(points):
 # If the problem is a summation, give a closed form first.
 #
 # 1. f(n) = n^2 + 2n + 1
+#   Quadratic Time
+#
 # 2. f(n) = sum(i=0, n, sum(j=0, i, 1) )
+#   Quadratic Time
+#
 # 3. f(n) = (n+1)!
+#   Factorial Time
+
 # 4. f(n) = sum(i=1, n, log(i))
+#   Logarithmic Time
+#
 # 5. f(n) = log(n!)
+#   n log n - Linearithmic from textbook
 ############################################################################
 
 if __name__ == "__main__":
