@@ -1,7 +1,7 @@
 
 # CS 350: Homework 1
 # Due: Week of 4/4
-# Name: 
+# Name: Alex Harris
 
 # This homework is largely review, and to make sure you have a working version of python.
 
