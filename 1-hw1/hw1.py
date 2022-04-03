@@ -5,6 +5,12 @@
 
 # This homework is largely review, and to make sure you have a working version of python.
 
+from distutils.command.build_scripts import first_line_re
+import math
+
+from attr import NOTHING
+
+
 ############################################################################
 #
 # Problem 1
@@ -22,13 +28,15 @@ def largest2(l):
     """
     first = 0
     second = 0
-    #(n*1)+(n*1) -> O(n)
+    #(n*1)+(n*1) -> O(2n)
     for i in range(len(l)): #O(n)
         if l[i] > first: #O(1)
             first = l[i] #O(1)
+
     for i in range(len(l)): #O(n)
         if l[i] > second and l[i] is not first: #O(1)
             second = l[i] #O(1)
+
     caught_nums = (first, second)
 
     return caught_nums
@@ -39,7 +47,7 @@ def largest2(l):
 # Reverse a list in place,
 # and returned the reversed list.
 #
-# Running Time: 
+# Running Time: O(n)
 ############################################################################
 
 def reverse(l):
@@ -50,14 +58,15 @@ def reverse(l):
     >>> l
     [5, 4, 3, 2, 1]
     """
-    temp = 0
-    #what?????
-   # for i in range (len(l)):
-   #     temp = l[(len(l))-i]
-   #     l[(len(l))-i] = l[i]
-   #     l[i] = temp
-   #     print(f"{l[i]}")
+    #n * 1 -> O(n)
+    temp = 0#O(1)
+    scan = len(l) - 1#O(1)
+    scan2 = scan >> 1#O(1)
 
+    for i in range (scan2):#O(n)
+       temp = l[scan-i]#O(1)
+       l[scan-i] = l[i]#O(1)
+       l[i] = temp#O(1)
 
     return l
 
@@ -67,7 +76,7 @@ def reverse(l):
 # Compute the transpose of a matrix in place.
 #
 # What is the input size measuring?
-# Running Time: 
+# Running Time: O(n^2)
 ############################################################################
 
 def transpose(m):
@@ -78,7 +87,16 @@ def transpose(m):
     >>> m
     [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
     """
-    pass
+    p = [] #O(1)
+    for i in range(len(m)):#O(n)
+        p.append([0] * len(m))#O(1)
+
+    for i in range (len(m)):#O(n^2)
+        for j in range (len(m[i])):#O(n)
+            p[j][i] = m[i][j]#O(1)
+    
+    m = p
+    return m
 
 ############################################################################
 #
@@ -87,15 +105,28 @@ def transpose(m):
 # The distance between two points (x1,y1) and (x2,y2) is:
 # d = sqrt((x2-x1)^2 + (y2-y1)^2)
 #
-# Running Time: 
+# Running Time: O(n^2)
 ############################################################################
 
 def pointDist(points):
     """
     >>> pointDist([(1,1), (4,5), (13,6)])
-    5
+    5.0
     """
-    pass
+
+    small = None #O(1)
+    for i in range(len(points)):#O(n^2)
+        for j in range(len(points)):#O(n)
+            if i is not j:#O(1)
+                (x1,y1) = points[i]#O(1)
+                (x2,y2) = points[j]#O(1)
+                if small == None:#O(1)
+                    small = math.sqrt((x2-x1)**2 + (y2-y1)**2)#O(1)
+
+                elif small > math.sqrt((x2-x1)**2 + (y2-y1)**2):#O(1)
+                    small = math.sqrt((x2-x1)**2 + (y2-y1)**2)#O(1)
+
+    return small
 
 ############################################################################
 #
@@ -104,7 +135,7 @@ def pointDist(points):
 # For the running time A is an m*n matrix, and B is an n*l matrix.
 #
 # what is the size of the output? ?*?
-# Running Time: 
+# Running Time: O(n^3)
 ############################################################################
 
 def matMul(A,B):
@@ -112,7 +143,18 @@ def matMul(A,B):
     >>> matMul([[1, 2, 3], [4, 5, 6]], [[7, 8], [9, 10], [11, 12]])
     [[58, 64], [139, 154]]
     """
-    pass
+
+    mfinal = []#O(1)
+    for i in range (len(A)): #O(n^3)
+        row = [] #O(1)
+        for j in range (len(B[0])): #O(n^2)
+            temp = 0 #O(1)
+            for k in range (len(B)): #O(n)
+                temp += A[i][k] * B[k][j] #O(1)
+            row.append(temp) #O(1)
+        mfinal.append(row) #O(1)
+
+    return mfinal
 
 
 ############################################################################
@@ -126,7 +168,7 @@ def matMul(A,B):
 # bitwise operations are constant time though.
 #
 # What is the input size?
-# Running Time: 
+# Running Time: O(n)
 ############################################################################
 
 def popcount(x):
@@ -138,7 +180,16 @@ def popcount(x):
     >>> popcount(256)
     1
     """
-    pass
+    t = 1  #O(1)
+    c = 0  #O(1)
+    for i in range(x): #O(n)
+        if t & x:  #O(1)
+           c += 1  #O(1)
+           t = t << 1  #O(1)
+        else:  #O(1)
+            t = t << 1  #O(1)
+
+    return c
 
 ############################################################################
 #
@@ -149,7 +200,7 @@ def popcount(x):
 # You can assume that arithmetic operations are constant time for this algorithm.
 #
 # What is the input size?
-# Running Time: 
+# Running Time: O(1)
 ############################################################################
 
 def isqrt(x):
@@ -157,11 +208,12 @@ def isqrt(x):
     >>> isqrt(6)
     2
     >>> isqrt(121)
-    10
+    11
     >>> isqrt(64)
     8
     """
-    pass
+    
+    return int(math.sqrt(x)) #O(1)
 
 ############################################################################
 #
@@ -182,7 +234,7 @@ def isqrt(x):
 #      "    s"]
 #
 # what is your input size?
-# Running Time: 
+# Running Time: O(n^2)
 ############################################################################
 
 def wordSearch(word,grid):
@@ -192,7 +244,18 @@ def wordSearch(word,grid):
     >>> wordSearch(s,g)
     True
     """
-    pass
+    matched = "" #O(1)
+    for i in range (len(grid)): #O(n^2)
+        for j in range (len(grid[0])): #O(n)
+           if i < len(word) and word[i] is grid[i][j]: #O(1)
+               matched += grid[i][j] #O(1)
+    
+    print(matched)
+
+    if matched == word: #O(1)
+        return True 
+        
+    return False
 
 ############################################################################
 #
@@ -225,7 +288,22 @@ def convexHull(points):
     >>> convexHull([(1,1), (4,2), (4,5), (7,1)])
     [(1, 1), (4, 5), (7, 1)]
     """
-    pass
+    actual = []
+
+    for i in range(len(points)):
+        (x1, y1) = points[i]
+        if i != len(points)-1:
+            (x2, y2) = points[i+1]
+        elif i == len(points)-1:
+            (x2, y2) = points[0]
+        a = y2 - y1
+        b = x1 - x2
+        c = (x1*y2) - (x2*y1)
+        if c < (a*1+b*1) or c == (a*1+b*1):
+            actual.append((x1,y1))
+
+    
+    return actual
 
 ############################################################################
 #
@@ -237,7 +315,7 @@ def convexHull(points):
 # 1. f(n) = n^2 + 2n + 1
 # 2. f(n) = sum(i=0, n, sum(j=0, i, 1) )
 # 3. f(n) = (n+1)!
-# 4. f(n) = sum(i=0, n, log(i))
+# 4. f(n) = sum(i=1, n, log(i))
 # 5. f(n) = log(n!)
 ############################################################################
 
