@@ -235,7 +235,10 @@ def isqrt(x):
 #      "    s"]
 #
 # what is your input size?
-# Running Time: O(n^2)
+# Running Time: 
+# I couldn't think of a clean iterative, and the recursive is not nice either.
+# the best running time I could conclude based on some internet...
+# O(n^log(a)) where a is the number of function calls in the recursive function
 ############################################################################
 
 def wordSearch(word,grid):
@@ -245,16 +248,77 @@ def wordSearch(word,grid):
     >>> wordSearch(s,g)
     True
     """
-    matched = "" #O(1)
-    for i in range (len(grid)): #O(n^2)
-        for j in range (len(grid[0])): #O(n)
-           if i < len(word) and word[i] is grid[i][j]: #O(1)
-               matched += grid[i][j] #O(1)
-    
-    if matched == word: #O(1)
-        return True 
+    matched = ""
+    i = 0
+    j = 0
+    k = 0
+            
+    return recurseSearch(i, j, k, word, grid, matched)
+
+def recurseSearch(i, j, k, word, grid, matched):
         
+    if(j == -1 or i == -1 or k > len(word)-1 or i > len(grid)-1 or j > len(grid[i])-1):
+        return False
+
+    if(i == 0 and j == 0 and k+1 < len(word) and grid[i][j] is word[k]):
+        matched += grid[i][j]
+        if(matched == word):
+            return True
+        return recurseSearch(i, j+1, k+1, word, grid, matched)
+    
+    if(j < len(grid[i])-1 and grid[i][j+1] is word[k]):
+        matched += grid[i][j+1]
+        if(matched == word):
+            return True
+        return recurseSearch(i, j+1, k+1, word, grid, matched)
+
+    if(i < len(grid)-1 and grid[i+1][j] is word[k]):
+        matched += grid[i+1][j]
+        if(matched == word):
+            return True
+        return recurseSearch
+    
+    if(i < len(grid)-1 and j < len(grid[i])-1 and grid[i+1][j+1] is word[k]):
+        matched += grid[i+1][j+1]
+        if(matched == word):
+            return True
+        return recurseSearch(i+1, j+1, k+1, word, grid, matched)
+    
+    if(i-1 != -1 and grid[i-1][j] is word[k]):
+        matched += grid[i-1][j]
+        if(matched == word):
+            return True
+        return recurseSearch(i-1, j, k+1, word, grid, matched)
+
+    if(j-1 != -1 and i != 0 and grid[i][j-1] is word[k]):
+        matched += grid[i][j-1]
+        if(matched == word):
+            return True
+        return recurseSearch(i, j-1, k+1, word, grid, matched)
+
+    if(i-1 != -1 and j-1 != -1 and grid[i-1][j-1] is word[k]):
+        matched += grid[i-1][j-1]
+        if(matched == word):
+            return True
+        return recurseSearch(i-1, j-1, k+1, word, grid, matched)
+    
+    if(i < len(grid)-1 and j-1 != -1 and grid[i+1][j-1] is word[k]):
+        matched += grid[i+1][j-1]
+        if(matched == word):
+            return True
+        return recurseSearch(i+1, j-1, k+1, word, grid, matched)
+    
+    if(i != len(grid)-1 and j == len(grid[i])-1):
+        j = 0
+        return recurseSearch(i+1, j, k, word, grid, matched)
+    
+    elif(i != len(grid)-1 and j != len(grid[i])-1):
+        return recurseSearch(i, j+1, k, word, grid, matched)
+    
+    
     return False
+
+
 
 ############################################################################
 #
