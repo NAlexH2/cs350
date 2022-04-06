@@ -238,7 +238,8 @@ def isqrt(x):
 # Running Time: 
 # I couldn't think of a clean iterative, and the recursive is not nice either.
 # the best running time I could conclude based on some internet...
-# O(n^log(a)) where a is the number of function calls in the recursive function
+# O(n^log(a)) 
+# where a is the number of function calls in the recursive function
 ############################################################################
 
 def wordSearch(word,grid):
@@ -254,7 +255,7 @@ def wordSearch(word,grid):
     k = 0
             
     return recurseSearch(i, j, k, word, grid, matched)
-
+# had to do this one recursivly. could not figure out a iterative to save my life
 def recurseSearch(i, j, k, word, grid, matched):
         
     if(j == -1 or i == -1 or k > len(word)-1 or i > len(grid)-1 or j > len(grid[i])-1):
