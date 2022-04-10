@@ -1,7 +1,7 @@
 
 # CS 350: Homework 2
 # Due: Week of 4/11
-# Name: 
+# Name: Alex Harris
 
 
 
@@ -15,18 +15,37 @@
 # output: a pair of numbers (a,b) where a,b are in l, and a + b == s
 # findSum([1,3,5], 8) returns (3, 5)
 # 
-# What data structure did you use?
-# Running Time: 
+# What data structure did you use? Just the included list
+# Running Time: Theta(1) amortized
 #########################################3
+
+from itertools import count
+from re import I
+
+from numpy import kaiser
+
 
 def findSum(l, s):
     """
     >>> findSum([1,3,5], 8)
     (3, 5)
     >>> findSum([1,2,5], 8)
-    None
     """
-    pass
+    i = 0
+    k = 1
+
+    # print(range(len(l)))
+    
+    while i <= len(l)-1 and k <= len(l)-1:
+        if (l[i] + l[k]) == s:
+            return (l[i],l[k])
+        elif k == len(l)-1 and i != len(l)-1:
+            k = 0
+            i += 1
+        else:
+            k += 1
+         
+    return
 
 
 #########################################3
@@ -39,16 +58,32 @@ def findSum(l, s):
 # output: the mode of l.
 # mode([1,2,3,3,4,5]) returns 3
 # 
-# What data structure did you use?
-# Running Time: 
+# What data structure did you use? list
+# Running Time: T(n)
 #########################################3
 
 def mode(l):
     """
-    >>> mode([1,2,3,3,4,5])
-    3
+    >>> mode([500,1,500,2,3,500,5,500,6,500,7,500,8,500,9,500,10])
+    500
     """
-    pass
+    size = 0
+    
+    for i in range(len(l)):
+        if l[i] > size:
+            size = l[i]+1
+    
+    occur = [0] * size
+    most = 0
+    
+    for i in range(len(l)-1):
+        val = l[i]
+        occur[val] += 1
+        
+        if occur[val] > most:
+            most = occur[val]
+    
+    return occur.index(most) #index is T(n) 
 
 
 #########################################3
@@ -83,10 +118,11 @@ def mode(l):
 # [3, 4, None, None, None, None, 1, 2]
 #                                ^ front
 #    
-# pushFront Running Time: 
-# pushBack Running Time: 
-# popFront Running Time: 
-# popBack Running Time: 
+# pushFront Running Time: T(1)
+# pushBack Running Time: T(1)
+# popFront Running Time: T(1)
+# popBack Running Time:  T(1)
+# (my function) bodyValidate Running Time: T(1)
 #########################################3
 
 def malloc(size):
@@ -123,16 +159,98 @@ class RingBuffer():
     # It will help to test this method on it's own.
     # Think carefully about what cases you can have with front and back.
     def resize(self):
-        pass
-
+        biggersize = len(self.body) << 1
+        new_body = malloc(biggersize)
+        if self.front > 1:
+            i = self.front-1 # -1 due to decrimation in "pushfront" if front == 0
+        i = self.front
+        if self.back < -1:
+            k = self.back+1 # +1 due to decrimation in "pushback" if back == 0
+        k = self.back
+        while i != 0 or k != 0:
+            if i > 0:
+                new_body[i] = self.body[i]
+                i -= 1
+            if k < 0:
+                new_body[k] = self.body[k]
+                k += 1
+        self.size = biggersize
+        return new_body
+        
     def pushFront(self, x):
-        pass
+        if self.front == 0 and self.back == 0:
+            self.body = [x]
+            self.front += 1
+            return
+
+        if self.body_validate():
+            self.body = self.resize()
+            if self.front != 0:
+                self.front += 1
+                self.body[self.front] = x
+                return
+            self.body[self.front] = x
+            self.front += 1
+            return
+        
+        self.body[self.front] = x
+        self.front += 1
+
     def pushBack(self, x):
-        pass
+        if self.back == 0 and self.front == 0:
+            self.back -= 1
+            self.body = [x]
+            return
+        
+        if self.body_validate():
+            self.body = self.resize()
+            if self.back != 0:
+                self.back -= 1
+                self.body[self.back] = x
+                return
+            self.body[self.back] = x
+            self.back -= 1
+
+            return
+        
+        self.body[self.back] = x
+        self.back -= 1
+
+    
     def popFront(self):
-        pass
+        togo = 0
+        if self.front == 0 and self.back == 0:
+            togo = self.body[self.front]
+            self.body = []
+            return togo
+        
+        self.front -= 1
+        togo = self.body[self.front]  
+        self.body[self.front] = None
+        return togo
+
     def popBack(self):
-        pass
+        togo = 0
+        if self.back == 0:
+            togo = self.body[self.back]
+            self.body = []
+            return togo
+        
+        self.back += 1
+        togo = self.body[self.front]
+        self.body[self.back] = None
+        return togo
+    
+    def body_validate(self):
+    #Returns true if the list is full in each array slot
+        if (self.size == 0 
+        or id(self.body[self.front+1]) == id(self.body[self.back])
+        or len(self.body) + self.back == 0 
+        or self.front == self.size):
+            return True
+        
+        return False
+        
 
 #########################################3
 # Problem 4:
@@ -177,6 +295,6 @@ class Heap():
     def pop(self):
         pass
 
-if __name__ == "__main__":
+if __name__ == "__main__":        
     import doctest
     doctest.testmod()
