@@ -275,22 +275,28 @@ class Heap():
     >>> h.push(4)
     >>> h.push(1)
     >>> h.push(5)
-    >>> h.pop()
-    1
-    >>> h.pop()
-    2
-    >>> h.pop()
-    3
-    >>> h.pop()
-    4
-    >>> h.pop()
-    5
     """
+    # >>> h.pop()
+    # 1
+    # >>> h.pop()
+    # 2
+    # >>> h.pop()
+    # 3
+    # >>> h.pop()
+    # 4
+    # >>> h.pop()
+    # 5
+    
     def __init__(self):
-        pass
+        self.size = 0
+        self.body = []
+        
 
     def push(self, x):
-        pass
+        if self.size == 0:
+            self.body = [x]
+        else:
+            return
 
     def pop(self):
         pass
