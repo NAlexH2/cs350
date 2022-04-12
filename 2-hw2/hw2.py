@@ -118,8 +118,8 @@ def mode(l):
 # [3, 4, None, None, None, None, 1, 2]
 #                                ^ front
 #    
-# pushFront Running Time: T(1)
-# pushBack Running Time: T(1)
+# pushFront Running Time: T(1) amortized
+# pushBack Running Time: T(1) amortized
 # popFront Running Time: T(1)
 # popBack Running Time:  T(1)
 # (my function) bodyValidate Running Time: T(1)
@@ -275,17 +275,17 @@ class Heap():
     >>> h.push(4)
     >>> h.push(1)
     >>> h.push(5)
+    >>> h.pop()
+    1
+    >>> h.pop()
+    2
+    >>> h.pop()
+    3
+    >>> h.pop()
+    4
+    >>> h.pop()
+    5
     """
-    # >>> h.pop()
-    # 1
-    # >>> h.pop()
-    # 2
-    # >>> h.pop()
-    # 3
-    # >>> h.pop()
-    # 4
-    # >>> h.pop()
-    # 5
     
     def __init__(self):
         self.size = 0
@@ -293,13 +293,81 @@ class Heap():
         
 
     def push(self, x):
+        
+        if self.size % 2 == 0:
+            seeker = self.size
+            parent = (seeker-1)//2
+        elif self.size % 2 == 1:
+            seeker = self.size
+            parent = (seeker-2)//2
+            
         if self.size == 0:
             self.body = [x]
-        else:
+            self.size = len(self.body)
+            return
+        
+        elif x > self.body[parent]:
+            self.body.append(x)
+            self.size = len(self.body)
             return
 
+        else:
+            self.body.append(x)
+            self.size = len(self.body)
+            if self.size % 2 == 0:
+                seeker = self.size-1
+                parent = (seeker-1)//2
+            elif self.size % 2 == 1:
+                seeker = self.size-1
+                parent = (seeker-2)//2
+            
+            while self.body[seeker] < self.body[parent] and seeker != 0:
+                self.body[seeker], self.body[parent] = self.body[parent], self.body[seeker]
+                self.body[seeker], self.body[parent+1] = self.body[parent+1], self.body[seeker]
+                
+                seeker = parent
+                if seeker % 2 == 0:
+                    parent = (seeker)//2
+                elif seeker % 2 == 1:
+                    parent = (seeker-1)//2
+            return
+                
+            
+            
+
     def pop(self):
-        pass
+        togo = 0
+        if self.size == 0:
+            return
+        elif self.size == 1:
+            togo = self.body[0]
+            self.body = []
+            
+        elif self.size > 1:
+            end = self.size - 1
+            togo = self.body[0]
+            self.body[0] = self.body[end]
+            i = 0
+            child1 = (2*i)+1
+            child2 = (2*i)+2
+            while (child1 < self.size-1 
+                   and child2 < self.size-1
+                   and (self.body[i] > self.body[child1] 
+                        or self.body[i] > self.body[child2])):
+                if self.body[i] > self.body[child1]:
+                    self.body[i], self.body[child1] = self.body[child1], self.body[i]
+                    i = child1
+                elif self.body[i] > self.body[child2]:
+                    self.body[i], self.body[child2] = self.body[child2], self.body[i]
+                    i = child2
+                child1 = (2*i)+1
+                child2 = (2*i)+2
+            self.body.pop()
+            self.size = len(self.body)
+            return togo
+                
+
+        return togo
 
 if __name__ == "__main__":        
     import doctest
