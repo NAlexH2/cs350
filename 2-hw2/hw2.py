@@ -64,8 +64,8 @@ def findSum(l, s):
 
 def mode(l):
     """
-    >>> mode([500,1,500,2,3,500,5,500,6,500,7,500,8,500,9,500,10])
-    500
+    >>> mode([1,2,3,3,4,5])
+    3
     """
     size = 0
     
@@ -263,8 +263,8 @@ class RingBuffer():
 # you need to fill it in.
 # 
 # 
-# push Running Time: 
-# pop Running Time: 
+# push Running Time: T(log n)
+# pop Running Time: T(log n)
 #########################################3
 
 class Heap():
@@ -295,10 +295,10 @@ class Heap():
     def push(self, x):
         
         if self.size % 2 == 0:
-            seeker = self.size
+            seeker = self.size-1
             parent = (seeker-1)//2
         elif self.size % 2 == 1:
-            seeker = self.size
+            seeker = self.size-1
             parent = (seeker-2)//2
             
         if self.size == 0:
@@ -324,7 +324,6 @@ class Heap():
             while self.body[seeker] < self.body[parent] and seeker != 0:
                 self.body[seeker], self.body[parent] = self.body[parent], self.body[seeker]
                 self.body[seeker], self.body[parent+1] = self.body[parent+1], self.body[seeker]
-                
                 seeker = parent
                 if seeker % 2 == 0:
                     parent = (seeker)//2
@@ -342,6 +341,7 @@ class Heap():
         elif self.size == 1:
             togo = self.body[0]
             self.body = []
+            self.size = 0
             
         elif self.size > 1:
             end = self.size - 1
