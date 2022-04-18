@@ -21,6 +21,8 @@ def gap(l):
     >>> gap([1,6,2,4,9])
     3
     """
+    if not l:
+        return
     gappiest = 0
     l.sort()
     for i in range(len(l)-1):
@@ -54,6 +56,8 @@ def largestConcat(l):
     >>> largestConcat([1,2,55,3])
     55321
     """
+    if not l:
+        return
     l.sort(reverse=True)
     
     return concatenate(l)
@@ -65,14 +69,41 @@ def largestConcat(l):
 # Write a function to return the number of unique elements in an array.
 # for example the list [3,6,2,3,2,7,4] has 3 unique elements, 6, 7, and 4.
 #
-# Running Time: 
+# Running Time: T(n)
 ############################################################################
 def numberUnique(l):
     """
     >>> numberUnique([3,6,2,3,2,7,4])
     3
     """
-    pass
+    # If the list is empty
+    if not l:
+        return
+
+    # Using the trick from assignment two on finding the mode, but for finding
+    # duplicates. First we need to make a list the largest value in the list + 1 
+    # to account for all numbers 0->max(l)
+    l.sort(reverse=True)
+    nodupes = [0] * (l[0]+1)
+    
+    # Empty list of the unique numbers to be found
+    uniquenums = 0
+    
+
+    for i in range(len(l)):
+        nodupes[l[i]] += 1
+        
+        # If we're 1, great lets just do that now
+        # and correct later
+        if nodupes[l[i]] == 1:
+            uniquenums += 1
+            
+        # We've been here before, and now we're larger than 1
+        # so lets just undo our counting
+        elif nodupes[l[i]] > 1:
+            uniquenums -= 1
+
+    return uniquenums
 
 
 ############################################################################
@@ -83,11 +114,16 @@ def numberUnique(l):
 # Running Time: 
 ############################################################################
 def insertionSort(l):
-    # """
-    # >>> insertionSort([3,6,2,5,1])
-    # [1,2,3,5,6]
-    # """
-    pass
+    """
+    >>> insertionSort([3,6,2,5,1])
+    [1,2,3,5,6]
+    """
+    if not l:
+        return
+
+    
+    
+    return l
 
 ############################################################################
 #
