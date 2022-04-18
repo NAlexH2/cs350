@@ -1,7 +1,7 @@
 
-# CS 350: Homework 1
+# CS 350: Homework 3
 # Due: Week of 4/18
-# Name: 
+# Name: Alex Harris
 
 # for this homework, unless I'm asking you to sort a list,
 # you are allowed to use the sorted function in Python.
@@ -13,6 +13,8 @@
 # Compute the largest gap between two numbers in a list.
 #
 # for example: gap([1,6,2,4,9]) == 3 because the gap between 6 and 9 is 3.
+# The gap isn't 8 because even thought 9-1 is 8, there is a 4 in the middle
+# of those numbers.
 ############################################################################
 def gap(l):
     """
@@ -26,7 +28,6 @@ def gap(l):
             gappiest = l[i+1] - l[i]
     
     return gappiest
-
 ############################################################################
 #
 # Problem 2
@@ -40,7 +41,7 @@ def gap(l):
 #
 # Write a function to find the largest value we can get from concatenating a list.
 #
-# Running Time: n*log(n)
+# Running Time: T(n * log(n))
 ############################################################################
 def concatenate(l):
     out = ""
@@ -50,8 +51,8 @@ def concatenate(l):
 
 def largestConcat(l):
     """
-    >>> largestConcat([1,6,2,4,9])
-    96421
+    >>> largestConcat([1,2,55,3])
+    55321
     """
     l.sort(reverse=True)
     
@@ -67,6 +68,10 @@ def largestConcat(l):
 # Running Time: 
 ############################################################################
 def numberUnique(l):
+    """
+    >>> numberUnique([3,6,2,3,2,7,4])
+    3
+    """
     pass
 
 
@@ -77,7 +82,11 @@ def numberUnique(l):
 #
 # Running Time: 
 ############################################################################
-def insertionSort(n):
+def insertionSort(l):
+    # """
+    # >>> insertionSort([3,6,2,5,1])
+    # [1,2,3,5,6]
+    # """
     pass
 
 ############################################################################
@@ -88,7 +97,12 @@ def insertionSort(n):
 # Running Time: 
 ############################################################################
 def heapSort(n):
+    # """
+    # >>> heapSort([3,6,2,5,1])
+    # [1,2,3,5,6]
+    # """
     pass
+
 
 if __name__ == "__main__":        
     import doctest
