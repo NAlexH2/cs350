@@ -7,6 +7,8 @@
 # you are allowed to use the sorted function in Python.
 # sorted takes a list, and returns a sorted copy of the list in Theta(n*log(n)) time.
 
+from functools import cmp_to_key
+
 ############################################################################
 #
 # Problem 1
@@ -43,9 +45,9 @@ def gap(l):
 #
 # Write a function to find the largest value we can get from concatenating a list.
 #
-# Running Time: Theta(n * log(n))
+# Running Time: Theta(n log(n))
 ############################################################################
-def concatenate(l): #TODO - Make the array a string and make it work that way
+def concatenate(l): 
     out = ""
     for x in l:
         out = out + str(x)
@@ -57,14 +59,24 @@ def largestConcat(l):
     55321
     >>> largestConcat([97,976,8])
     979768
-    >>> largestConcat([87, 879, 5])
+    >>> largestConcat([87,879,5])
     879875
+    >>> largestConcat([976,97,8])
+    979768
+    >>> largestConcat([879,87,5])
+    879875
+    >>> largestConcat([])
     """
     if not l:
         return
     l.sort(reverse=True)
-    
-    return concatenate(l)
+    cat1 = str(l[0]) + str(l[1])
+    cat2 = str(l[1]) + str(l[0])
+    if int(cat1) < int(cat2):
+        l[0], l[1] = l[1], l[0]
+        return concatenate(l) 
+    else:
+        return concatenate(l)
 
 
 ############################################################################
@@ -73,7 +85,7 @@ def largestConcat(l):
 # Write a function to return the number of unique elements in an array.
 # for example the list [3,6,2,3,2,7,4] has 3 unique elements, 6, 7, and 4.
 #
-# Running Time: 
+# Running Time: Theta(n log(n))
 ############################################################################
 def numberUnique(l):
     """
@@ -126,7 +138,7 @@ def insert(l,x):
     
     return l
         
-def insertionSort(l): #TODO - FIX THIS
+def insertionSort(l):
     """
     >>> insertionSort([3,6,2,5,1])
     [1, 2, 3, 5, 6]
@@ -145,7 +157,7 @@ def insertionSort(l): #TODO - FIX THIS
 # Problem 5
 # Use the heap from last homework to sort an array.
 #
-# Running Time: 
+# Running Time: Theta(log(n))
 ############################################################################
 def heapSort(n):
     """
