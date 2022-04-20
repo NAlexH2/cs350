@@ -157,7 +157,7 @@ def insertionSort(l):
 # Problem 5
 # Use the heap from last homework to sort an array.
 #
-# Running Time: Theta(log(n))
+# Running Time: Theta(n log(n))
 ############################################################################
 def heapSort(n):
     """

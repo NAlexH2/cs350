@@ -1,6 +1,6 @@
 # CS 350: Homework 4
 # Due: Week of 4/4
-# Name: 
+# Name: Alex Harris
 
 ############################################################################
 # Problem 1: Quicksort
