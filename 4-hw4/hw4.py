@@ -7,22 +7,46 @@
 # 
 # implement quicksort described in class.
 #
-# Recurrence worst case:
-# Recurrence average case:
-# Running time worst case:
-# Running time average case:
+# Recurrence worst case: T(n-1) + 1 + n
+# Recurrence average case: T(n) = 2T(n/2) + n
+# Running time worst case: O(n^2)
 # 
+# Running time average case: 
+# 2T(n/2)+n | a = 2, b = 2, f(n) = n
+# k = log|2|(2) = 1
+# n^1 = n
+# n = f(n)
+# Therefore: f(n) E Theta(n^log|b|(a)) then T(n) E Theta(n^log|b|(a) * log|b|(n)) 
+# So...
+# Theta(n^log|2|(2) * log|2|(2)) = Theta(n^1 * 1) = Theta(n)
+# I'll refrein from repeating this in the future. This was to re-explain to my future self. 
+#
 # When does the worst case happen?
+# A: When the list is already sorted
 ############################################################################
 
 def quicksort(l):
     """
     >>> quicksort([3,2,6,1,4])
-    [1,2,3,4,6]
+    [1, 2, 3, 4, 6]
     >>> quicksort([5,4,3,2,1])
-    [5,4,3,2,1]
+    [1, 2, 3, 4, 5]
     """
-    pass
+    if len(l) == 0:
+        return l
+    small = []
+    big = []
+    found = []
+    for i in range(1,len(l)):
+        if l[i] < l[0]:
+            small.append(l[i])
+        else:
+            big.append(l[i])
+    
+    found += quicksort(small)
+    found.append(l[0])
+    found += quicksort(big)
+    return found
 
 ############################################################################
 # Problem 2: maximum sublist sum
@@ -37,15 +61,23 @@ def quicksort(l):
 # For example:  [-2,1,-3,4,-1,2,1,-5,4]
 # the maximum sublist is [4,-1,2,1] with a sum of 6
 # 
-# Running time:
+# Running time: Theta(n^2)
 ############################################################################
 def maxSublist(l):
     """
     >>> maxSublist([-2,1,-3,4,-1,2,1,-5,4])
-    [4,-1,2,1]
+    [4, -1, 2, 1]
     """
-    pass
-
+    maxval = 0
+    finallist = []
+    
+    for i in range(len(l)-1):
+        for j in range(i+1,len(l)-1):
+            if sum(l[i:j]) > maxval:
+                maxval = sum(l[i:j])
+                finallist = l[i:j]
+    
+    return finallist
 
 ############################################################################
 # Problem 3: Parenthesizing matrices.
@@ -70,12 +102,12 @@ def maxSublist(l):
 # 
 # Running time:
 ############################################################################
-def matrixParens(sizes):
-    """
-    >>> matrixParens([(3,5), (5,4), (4,7)])
-    144
-    """
-    pass
+# def matrixParens(sizes):
+#     """
+#     >>> matrixParens([(3,5), (5,4), (4,7)])
+#     144
+#     """
+#     pass
 
 ############################################################################
 # Problem 4: Convex Hull again!
@@ -91,12 +123,12 @@ def matrixParens(sizes):
 # When does the worst case happen?
 ############################################################################
 
-def convexHull(l):
-    """
-    >>> convexHull([(1,1), (4,2), (4,5), (7,1)])
-    [(1, 1), (4, 5), (7, 1)]""
-    """
-    pass
+# def convexHull(l):
+#     """
+#     >>> convexHull([(1,1), (4,2), (4,5), (7,1)])
+#     [(1, 1), (4, 5), (7, 1)]""
+#     """
+#     pass
 
 ############################################################################
 # Problem 5: Recurrence relations

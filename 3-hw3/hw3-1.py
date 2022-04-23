@@ -7,7 +7,7 @@
 # you are allowed to use the sorted function in Python.
 # sorted takes a list, and returns a sorted copy of the list in Theta(n*log(n)) time.
 
-from functools import cmp_to_key
+
 
 ############################################################################
 #
@@ -47,6 +47,8 @@ def gap(l):
 #
 # Running Time: Theta(n log(n))
 ############################################################################
+from functools import cmp_to_key
+
 def concatenate(l): 
     out = ""
     for x in l:
