@@ -118,13 +118,13 @@ def maxsub(start, end, l):
     leftmax = maxsub(start, end//2, l)
     rightmax = maxsub((end//2)+1,end,l)
     
-    midmax = l[end//2]
-    if sum(l[((end//2)-1):end//2]) > sum(list(leftmax)):
+    midmax = [l[end//2]]
+    if sum(l[((end//2)-1):end//2]) > sum(midmax):
         midmax = maxsub(start+1, end//2, l)
-    if sum(l[end//2:((end//2)+1)]) > sum(list(rightmax)):
+    if sum(l[end//2:((end//2)+1)]) > sum(midmax):
         midmax = maxsub((end//2)+1, end, l)
     
-    return max(leftmax, rightmax, midmax)
+    return leftmax, rightmax, midmax
     
 
 
