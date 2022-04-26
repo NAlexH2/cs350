@@ -25,12 +25,29 @@
 # A: When the list is already sorted
 ############################################################################
 
+from curses.ascii import RS
+from multiprocessing.connection import wait
+from tkinter import W
+
+
 def quicksort(l):
     """
     >>> quicksort([3,2,6,1,4])
     [1, 2, 3, 4, 6]
     >>> quicksort([5,4,3,2,1])
     [1, 2, 3, 4, 5]
+    >>> quicksort([1,2,3,4,5])
+    [1, 2, 3, 4, 5]
+    >>> quicksort([1])
+    [1]
+    >>> quicksort([2,1])
+    [1, 2]
+    >>> quicksort([432,12,12,12,78,21,90])
+    [12, 12, 12, 21, 78, 90, 432]
+    >>> quicksort([3,3,3,3,3])
+    [3, 3, 3, 3, 3]
+    >>> quicksort([])
+    []
     """
     if len(l) == 0:
         return l
@@ -65,19 +82,51 @@ def quicksort(l):
 ############################################################################
 def maxSublist(l):
     """
-    >>> maxSublist([-2,1,-3,4,-1,2,1,-5,4])
-    [4, -1, 2, 1]
+    >>> maxSublist([1, 2, -8, 3, 2, 1])
+    [3, 2, 1]
+
     """
-    maxval = 0
-    finallist = []
+    # >>> maxSublist([-2,1,-3,4,-1,2,1,-5,4])
+    # [4, -1, 2, 1]
+    # >>> maxSublist([-9,-2,-3,-1,-3,-2,-11])
+    # [-1]
+    # >>> maxSublist([-9,-2,-3,1,-3,-2,-11])
+    # [1]
+    # >>> maxSublist([1,2,3,4,5])
+    # [1, 2, 3, 4, 5]
+    # >>> maxSublist([5,4,3,2,1])
+    # [5, 4, 3, 2, 1]
+    # >>> maxSublist([1, 2, -8, -4, 2, 1])
+    # [1, 2]
+   
+    # >>> maxSublist([8, -1, 5, -6, 78, -77, 9])
+    # [8, -1, 5, -6, 78]
+    # >>> maxSublist([8, -4, 5, -78, 78, -77, 9])
+    # [78]
     
-    for i in range(len(l)-1):
-        for j in range(i+1,len(l)-1):
-            if sum(l[i:j]) > maxval:
-                maxval = sum(l[i:j])
-                finallist = l[i:j]
+    # split list into left and right then check against middle. If middle is still smaller than left or right, means left or right is the larger value.
+    start = 0
+    end = len(l)-1 
+    # print(l,l[:end//2],end)
     
-    return finallist
+    return maxsub(start, end, l)
+
+def maxsub(start, end, l):
+    if start == end:
+        return [l]
+    
+    leftmax = maxsub(start, end//2, l)
+    rightmax = maxsub((end//2)+1,end,l)
+    
+    midmax = l[end//2]
+    if sum(l[((end//2)-1):end//2]) > sum(list(leftmax)):
+        midmax = maxsub(start+1, end//2, l)
+    if sum(l[end//2:((end//2)+1)]) > sum(list(rightmax)):
+        midmax = maxsub((end//2)+1, end, l)
+    
+    return max(leftmax, rightmax, midmax)
+    
+
 
 ############################################################################
 # Problem 3: Parenthesizing matrices.
@@ -100,14 +149,49 @@ def maxSublist(l):
 # example [(3,5), (5,4), (4,7)]
 # is 3*5*4 + 3*4*7 = 144
 # 
-# Running time:
+# Running time: T(n-1)+4 <- Not 100% certain but I suspect pretty close
 ############################################################################
-# def matrixParens(sizes):
-#     """
-#     >>> matrixParens([(3,5), (5,4), (4,7)])
-#     144
-#     """
-#     pass
+def matrixParens(sizes):
+    """
+    >>> matrixParens([(4,7), (7,5), (5,4)])
+    220
+    >>> matrixParens([(3,5), (5,4), (4,7)])
+    144
+    >>> matrixParens([(9,4), (4,9), (9,4), (4,9)])
+    972
+    >>> matrixParens([(9,4), (4,9)])
+    324
+    """
+    
+    totalM = 0
+    i = 0
+    return mCalc(totalM, sizes, i)
+
+#Recursive function
+def mCalc(totalM, m, i):
+    finalTM = 0 #To be returned
+    
+    newM = [0,0] #small list to hold our new matrix after the math is complete
+    
+    if i+1 > len(m)-1: #if i+1 is out of bounds of the list we have nothing left to do
+        return totalM
+    
+    #Total of the current matrix and the next in format of n*l*m in the form nxl lxm
+    totalM += m[i][0] * m[i+1][0] * m[i+1][1]
+    
+    #modify the temp list to hold the next CORRECT matrix size that would be present after the calculation
+    #in test three it's 9*4*9, but we only need the first and last values from the matrix (our n and m in this case)
+    #so the next matrix size would be 9x9
+    newM[0] = m[i][0]
+    newM[1] = m[i+1][1]
+    m[i+1] = tuple(newM) #in the form of (A*B)*C, then matrix A*B is AB. Therefore the next set is AB*C, then ABC*D, then ABCD*E etc...
+    #This is where the size of the matrix changes to then be calculated on the next go.
+    
+    i += 1 #increment to get to the next matrix in the list, which was modified to be our new size
+    finalTM += mCalc(totalM, m, i)#call it, store it...
+    return finalTM #send it.
+
+
 
 ############################################################################
 # Problem 4: Convex Hull again!
@@ -124,16 +208,16 @@ def maxSublist(l):
 ############################################################################
 
 # def convexHull(l):
-#     """
-#     >>> convexHull([(1,1), (4,2), (4,5), (7,1)])
-#     [(1, 1), (4, 5), (7, 1)]""
-#     """
-#     pass
+    # """
+    # >>> convexHull([(1,1), (4,2), (4,5), (7,1)])
+    # [(1, 1), (4, 5), (7, 1)]
+    # """
+    # pass
 
 ############################################################################
 # Problem 5: Recurrence relations
 # 
-# Give a closed form, and bit Theta for the following recurrence relations.
+# Give a closed form, and big Theta for the following recurrence relations.
 # If it's a divide and conquer relation, then you only need to give the Theta.
 #
 # a. Give the recurrence relation for Karatsuba's algorithm, and solve it.
