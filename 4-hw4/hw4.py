@@ -28,6 +28,7 @@
 from curses.ascii import RS
 from multiprocessing.connection import wait
 from tkinter import W
+from turtle import right
 
 
 def quicksort(l):
@@ -82,12 +83,14 @@ def quicksort(l):
 ############################################################################
 def maxSublist(l):
     """
-    >>> maxSublist([1, 2, -8, 3, 2, 1])
-    [3, 2, 1]
-
+    >>> maxSublist([8, -4, 5, -78, 78, -77, 9])
+    [78]
+    >>> maxSublist([-2,1,-3,4,-1,2,1,-5,4])
+    [4, -1, 2, 1]
     """
-    # >>> maxSublist([-2,1,-3,4,-1,2,1,-5,4])
-    # [4, -1, 2, 1]
+
+    # >>> maxSublist([1, 2, -8, 3, 2, 1])
+    # [3, 2, 1]
     # >>> maxSublist([-9,-2,-3,-1,-3,-2,-11])
     # [-1]
     # >>> maxSublist([-9,-2,-3,1,-3,-2,-11])
@@ -105,26 +108,52 @@ def maxSublist(l):
     # [78]
     
     # split list into left and right then check against middle. If middle is still smaller than left or right, means left or right is the larger value.
-    start = 0
-    end = len(l)-1 
-    # print(l,l[:end//2],end)
-    
-    return maxsub(start, end, l)
 
-def maxsub(start, end, l):
-    if start == end:
-        return [l]
+    start = end = mid = (len(l)//2)
+    leftmax = maxsub(len(l[0:(mid//2)]), len(l[0:(mid//2)]), len(l[0:(mid//2)]), l[0:mid], [l[len(l[0:(mid//2)])]])
+    rightmax = maxsub((len(l[mid:])//2)-1, len(l[mid:])//2, (len(l[mid:])//2), l[mid:], [l[(len(l[mid:]))]])
+    midmax = maxsub(start-1, mid, end, l, [l[mid]])
     
-    leftmax = maxsub(start, end//2, l)
-    rightmax = maxsub((end//2)+1,end,l)
+
     
-    midmax = [l[end//2]]
-    if sum(l[((end//2)-1):end//2]) > sum(midmax):
-        midmax = maxsub(start+1, end//2, l)
-    if sum(l[end//2:((end//2)+1)]) > sum(midmax):
-        midmax = maxsub((end//2)+1, end, l)
+    # print(leftmax, rightmax, midmax)
+    # print(max(leftmax, rightmax, midmax))
+    return max(leftmax, rightmax, midmax)
+    # return
+
+# def maxsub(start, mid, end, l, lastsum, lastlist):
+def maxsub(start, mid, end, l, lastlist):
+    if start < 0 or end > len(l)-1:
+        return lastlist
     
-    return leftmax, rightmax, midmax
+    
+    
+    if start-1 >= 0 and l[start-1]+sum(lastlist) > sum(lastlist):
+        lastlist = [l[start-1]] + lastlist
+        start -= 1
+        lastlist = maxsub(start, mid-1, end, l, lastlist)
+    elif sum(lastlist) > l[start]:
+        start -= 1
+        maxsub(start-1, mid-1, end, l, lastlist)
+    elif sum(lastlist) < l[start]:
+        lastlist = [l[start]]
+        start -= 1
+        lastlist = maxsub(start, mid-1, end, l, lastlist)
+        
+    if end+1 <= len(l) and l[end]+sum(lastlist) > sum(lastlist):
+        lastlist = lastlist + [l[end]]
+        end += 1
+        lastlist = maxsub(start, mid+1, end, l, lastlist)
+    elif sum(lastlist) > l[end]:
+        end += 1
+        maxsub(start, mid+1, end, l, lastlist)
+    elif sum(lastlist) < l[end]:
+        lastlist = [l[end]]
+        end += 1
+        lastlist = maxsub(start, mid+1, end, l, lastlist)
+        
+
+    return lastlist
     
 
 
