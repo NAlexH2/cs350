@@ -18,7 +18,7 @@
 # n = f(n)
 # Therefore: f(n) E Theta(n^log|b|(a)) then T(n) E Theta(n^log|b|(a) * log|b|(n)) 
 # So...
-# Theta(n^log|2|(2) * log|2|(2)) = Theta(n^1 * 1) = Theta(n)
+# Theta(n^log|2|(2) * log|2|(2)) = Theta(2^log|2|(n) * 1) = Theta(n * 1) = Theta(n)
 # I'll refrein from repeating this in the future. This was to re-explain to my future self. 
 #
 # When does the worst case happen?
@@ -83,79 +83,26 @@ def quicksort(l):
 ############################################################################
 def maxSublist(l):
     """
-    >>> maxSublist([8, -4, 5, -78, 78, -77, 9])
-    [78]
     >>> maxSublist([-2,1,-3,4,-1,2,1,-5,4])
     [4, -1, 2, 1]
+    
     """
 
-    # >>> maxSublist([1, 2, -8, 3, 2, 1])
-    # [3, 2, 1]
-    # >>> maxSublist([-9,-2,-3,-1,-3,-2,-11])
-    # [-1]
-    # >>> maxSublist([-9,-2,-3,1,-3,-2,-11])
-    # [1]
-    # >>> maxSublist([1,2,3,4,5])
-    # [1, 2, 3, 4, 5]
-    # >>> maxSublist([5,4,3,2,1])
-    # [5, 4, 3, 2, 1]
-    # >>> maxSublist([1, 2, -8, -4, 2, 1])
-    # [1, 2]
-   
-    # >>> maxSublist([8, -1, 5, -6, 78, -77, 9])
-    # [8, -1, 5, -6, 78]
-    # >>> maxSublist([8, -4, 5, -78, 78, -77, 9])
-    # [78]
-    
-    # split list into left and right then check against middle. If middle is still smaller than left or right, means left or right is the larger value.
-
-    start = end = mid = (len(l)//2)
-    leftmax = maxsub(len(l[0:(mid//2)]), len(l[0:(mid//2)]), len(l[0:(mid//2)]), l[0:mid], [l[len(l[0:(mid//2)])]])
-    rightmax = maxsub((len(l[mid:])//2)-1, len(l[mid:])//2, (len(l[mid:])//2), l[mid:], [l[(len(l[mid:]))]])
-    midmax = maxsub(start-1, mid, end, l, [l[mid]])
-    
 
     
-    # print(leftmax, rightmax, midmax)
-    # print(max(leftmax, rightmax, midmax))
-    return max(leftmax, rightmax, midmax)
-    # return
-
-# def maxsub(start, mid, end, l, lastsum, lastlist):
-def maxsub(start, mid, end, l, lastlist):
-    if start < 0 or end > len(l)-1:
-        return lastlist
+    # I spent *way* too long on this question in an attempt to find a recursive soltuion that was n log n but
+    # I couldn't scrounge one up. This is the best I got unfortunately and am looking forward to seeing the solution
+    # because I was very close several times but just missing some form of logic to get it just right.
     
-    
-    
-    if start-1 >= 0 and l[start-1]+sum(lastlist) > sum(lastlist):
-        lastlist = [l[start-1]] + lastlist
-        start -= 1
-        lastlist = maxsub(start, mid-1, end, l, lastlist)
-    elif sum(lastlist) > l[start]:
-        start -= 1
-        maxsub(start-1, mid-1, end, l, lastlist)
-    elif sum(lastlist) < l[start]:
-        lastlist = [l[start]]
-        start -= 1
-        lastlist = maxsub(start, mid-1, end, l, lastlist)
-        
-    if end+1 <= len(l) and l[end]+sum(lastlist) > sum(lastlist):
-        lastlist = lastlist + [l[end]]
-        end += 1
-        lastlist = maxsub(start, mid+1, end, l, lastlist)
-    elif sum(lastlist) > l[end]:
-        end += 1
-        maxsub(start, mid+1, end, l, lastlist)
-    elif sum(lastlist) < l[end]:
-        lastlist = [l[end]]
-        end += 1
-        lastlist = maxsub(start, mid+1, end, l, lastlist)
-        
-
-    return lastlist
-    
-
+    maxval = 0
+    finallist = []
+    for i in range(len(l)-1):
+        for j in range(i+1,len(l)-1):
+            if sum(l[i:j]) > maxval:
+                maxval = sum(l[i:j])
+                finallist = l[i:j]
+                
+    return finallist
 
 ############################################################################
 # Problem 3: Parenthesizing matrices.
