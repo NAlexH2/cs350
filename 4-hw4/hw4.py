@@ -188,8 +188,72 @@ def convexHull(l):
     >>> convexHull([(1,1), (4,2), (4,5), (7,1)])
     [(1, 1), (4, 5), (7, 1)]
     """
-    #this is a test
-    pass
+    largest = len(l)-1 #the last index in the list which should be the largest point
+    mid = len(l)//2
+    lower = []
+    upper = []
+    
+    lrp = [l[0],l[largest]] #lrp = left and right most points
+    for i in range(len(l)):
+        if l[i] not in lrp and l[i][1] < lrp[0][1] and l[i][1] < lrp[1][1]:
+            lower.append(l[i])
+        if l[i] not in lrp and l[i][1] > lrp[0][1] and l[i][1] > lrp[1][1]:
+            upper.append(l[i])
+    
+    hullMaths(l, lrp)
+    
+    return lrp;
+
+def hullMaths(l, lrp):
+    '''
+    Recursively compare the y's from p3 to see if they are even farther than p3?
+    New list between p3 and lmp/rmp? Or run a new upper lower and return the uppers?
+    A few /easy/ (using that loosely) options
+    1. scope is the found upper/lower points depending on the the part of the algo
+       that is currently in focus
+    '''
+    if l is None:
+        return
+    thehull = []
+    scope = l[1:len(l)-1] #ignoring left and right most points
+    #getscope()
+    p3 = findp3(scope, lrp, (0,0), 0)
+    
+    
+    return thehull
+
+def findp3(scope, lrp, far, curpos):
+    '''
+    lmp = left most point
+    rmp = right most point
+    scope = upper or lower of hull
+    far = current farthest point
+    curpos = used to "traverse" scope and capture the largest y
+    1. pass in the scope (upper or lower depending on the algo) and lrp
+    2. compare everypoint in the list against lmp and rmp
+    to make sure it is in bounds and is currently the farthest
+    with in the scope (either lower or upper).
+    3. if new farthest store to be returned, else traverse list and
+    compare again
+    '''
+    
+    try: #scan the list moving backwards
+        scope[0]
+    except IndexError:
+        return far #just return far to maintain a starting of 0,0
+    
+    far = findp3(scope[1:], lrp, far, curpos)
+    if abs(scope[0][0]) >= abs(lrp[0][0]) and abs(scope[0][1]) <= abs(lrp[1][0]):
+        if abs(scope[0][1]) > abs(far[1]):
+            far = scope[0]
+            return far
+        else:
+            return far
+
+def getscope(l, lrp):
+
+    
+    return mylist
 
 ############################################################################
 # Problem 5: Recurrence relations
