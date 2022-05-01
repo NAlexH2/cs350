@@ -126,7 +126,7 @@ def maxSublist(l):
 # example [(3,5), (5,4), (4,7)]
 # is 3*5*4 + 3*4*7 = 144
 # 
-# Running time: T(n-1)+4 <- Not 100% certain but I suspect pretty close
+# Running time: T(n-1)+4
 ############################################################################
 def matrixParens(sizes):
     """
@@ -224,11 +224,13 @@ def convexHull(l):
     
     return thehull;
 
+# Used to find if t > 0 and if so P3 is "on the left" of the line.
+# Uses various args to control the flow and prevent undesired behavior
 def hullMath(x1, y1, x2, y2, l):
     if (x2 or y2) == None:
         return
     if len(l) == 0:
-        return []
+        return
     rejects = ()
     t = ((x1*y2)+(x2*l[0][1])+(l[0][0]+y1))-((x2*y1)+(l[0][0]*y2)+(x1*l[0][1]))
     if t < 0 and (x1,y1) != l[0]:
@@ -240,7 +242,7 @@ def hullMath(x1, y1, x2, y2, l):
         
     return rejects
 
-
+#recursive linear search for points based on scope passed in (upper half or lower half)
 def findp3(scope, lrp, far):
     try: #scan the list moving backwards
         scope[1]
@@ -270,16 +272,28 @@ def findp3(scope, lrp, far):
 # If it's a divide and conquer relation, then you only need to give the Theta.
 #
 # a. Give the recurrence relation for Karatsuba's algorithm, and solve it.
+# RR: T(n) = 3T(n//2)+n
+# a = 3, b = 2, f(n) = n
+# k = log|b|(a) = log|2|(3)
+# f(n) < n^(log|2|(3)) 
+# Theta(n^(log|2|(3))
 # 
 # b. Give the recurrence relation for Strassen's algorithm, and solve it.
-# 
+# 7T(n//2)+n^2
+# a = 7, b = 2, f(n) = Theta(n^2)
+# k = log|b|(a) = log|2|(7)
+# f(n) = Theta(n^2) < n^(log|2|(7))
+# Theta(n^(log|2|(7))
+#  
 # c.
 # T(1) = 1
 # T(n) = T(n-1) + n
+# A: n => Theta(n)
 # 
 # d. 
 # T(1) = 1
 # T(n) = 2T(n-2) + 1
+# A: 2n+1 => Theta(n)
 # 
 ############################################################################
 
