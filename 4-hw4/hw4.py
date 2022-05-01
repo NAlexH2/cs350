@@ -27,6 +27,7 @@
 
 from curses.ascii import RS
 from multiprocessing.connection import wait
+from queue import Empty
 from tkinter import W
 from turtle import right
 
@@ -175,10 +176,10 @@ def mCalc(totalM, m, i):
 # Use the Divide and Conquer algorithm described in class to compute
 # the convex hull of a set of points.
 #
-# Recurrence worst case:
-# Recurrence average case:
-# Running time worst case:
-# Running time average case:
+# Recurrence worst case: T(n) = 2T(n//2)+n
+# Recurrence average case: T(n) = 2T(n//2)+n 
+# Running time worst case:  O(n log(n))
+# Running time average case: Theta(n log(n))
 # 
 # When does the worst case happen?
 ############################################################################
@@ -188,61 +189,71 @@ def convexHull(l):
     >>> convexHull([(1,1), (4,2), (4,5), (7,1)])
     [(1, 1), (4, 5), (7, 1)]
     """
+    if len(l) < 3: #convex hull must have three points
+        return
+    elif len(l) == 3:
+        return l #if it is explicitly 3, then the list itself is a convex hull
+    
+    l.sort() #pre-sort, this algo already runs in n log(n) so this is fine
+    
     largest = len(l)-1 #the last index in the list which should be the largest point
-    mid = len(l)//2
     lower = []
     upper = []
-    
+    thehull = []
+
     lrp = [l[0],l[largest]] #lrp = left and right most points
+
     for i in range(len(l)):
         if l[i] not in lrp and l[i][1] < lrp[0][1] and l[i][1] < lrp[1][1]:
-            lower.append(l[i])
+            lower = lower + [l[i]] #all points below the dividing line
         if l[i] not in lrp and l[i][1] > lrp[0][1] and l[i][1] > lrp[1][1]:
-            upper.append(l[i])
+            upper = upper + [l[i]] #all items above the dividing lines
+                        
     
-    hullMaths(l, lrp)
-    
-    return lrp;
+    p3lower = [findp3(lower, lrp, (0,0))] #the lowest point below the dividing line
+    p3upper = [findp3(upper, lrp, (0,0))] #the highest point above the dividing line.
+    # both run in O(n) as they are recursive linear searches seeking farthest point from
+    # previously determined upper and lower halfs
 
-def hullMaths(l, lrp):
-    '''
-    Recursively compare the y's from p3 to see if they are even farther than p3?
-    New list between p3 and lmp/rmp? Or run a new upper lower and return the uppers?
-    A few /easy/ (using that loosely) options
-    1. scope is the found upper/lower points depending on the the part of the algo
-       that is currently in focus
-    '''
-    if l is None:
+    bad1 = [hullMath(p3lower[0][0], p3lower[0][1], lrp[0][0], lrp[0][1], lower)]
+    bad2 = [hullMath(p3upper[0][0], p3upper[0][1], lrp[1][0], lrp[1][1], upper)]
+    bad1 = list(bad1) + list(bad2)
+    for i in range(len(l)):
+        if l[i] not in bad1 and not None:
+            thehull = thehull + [l[i]]
+    
+    return thehull;
+
+def hullMath(x1, y1, x2, y2, l):
+    if (x2 or y2) == None:
         return
-    thehull = []
-    scope = l[1:len(l)-1] #ignoring left and right most points
-    #getscope()
-    p3 = findp3(scope, lrp, (0,0), 0)
+    if len(l) == 0:
+        return []
+    rejects = ()
+    t = ((x1*y2)+(x2*l[0][1])+(l[0][0]+y1))-((x2*y1)+(l[0][0]*y2)+(x1*l[0][1]))
+    if t < 0 and (x1,y1) != l[0]:
+        rejects = rejects + l[0]
+        hullMath(x1, y1, x2, y2, l[1:])
     
-    
-    return thehull
+    else:
+        hullMath(x1, y1, x2, y2, l[1:])
+        
+    return rejects
 
-def findp3(scope, lrp, far, curpos):
-    '''
-    lmp = left most point
-    rmp = right most point
-    scope = upper or lower of hull
-    far = current farthest point
-    curpos = used to "traverse" scope and capture the largest y
-    1. pass in the scope (upper or lower depending on the algo) and lrp
-    2. compare everypoint in the list against lmp and rmp
-    to make sure it is in bounds and is currently the farthest
-    with in the scope (either lower or upper).
-    3. if new farthest store to be returned, else traverse list and
-    compare again
-    '''
-    
+
+def findp3(scope, lrp, far):
     try: #scan the list moving backwards
-        scope[0]
+        scope[1]
     except IndexError:
-        return far #just return far to maintain a starting of 0,0
+        try:
+            scope[0]
+        except IndexError:
+            return (None,None)
+        return scope[0] #just return far to maintain a starting of 0,0
     
-    far = findp3(scope[1:], lrp, far, curpos)
+    far = findp3(scope[1:], lrp, far)
+    if far is None: return
+
     if abs(scope[0][0]) >= abs(lrp[0][0]) and abs(scope[0][1]) <= abs(lrp[1][0]):
         if abs(scope[0][1]) > abs(far[1]):
             far = scope[0]
@@ -250,10 +261,7 @@ def findp3(scope, lrp, far, curpos):
         else:
             return far
 
-def getscope(l, lrp):
 
-    
-    return mylist
 
 ############################################################################
 # Problem 5: Recurrence relations
