@@ -25,13 +25,6 @@
 # A: When the list is already sorted
 ############################################################################
 
-from curses.ascii import RS
-from multiprocessing.connection import wait
-from queue import Empty
-from tkinter import W
-from turtle import right
-
-
 def quicksort(l):
     """
     >>> quicksort([3,2,6,1,4])
