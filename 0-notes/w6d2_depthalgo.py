@@ -23,7 +23,7 @@ def bfs_rec(g, u, v):
     parent = {u : u}
     queue = deque()
     queue.append(u)
-    while not stack.empty():
+    while not queue.empty():
         w = queue.popleft()
         for x in g[w]:
             if x not in parent:
