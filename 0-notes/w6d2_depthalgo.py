@@ -16,7 +16,7 @@ def dfs_rec(g, u, v, seen):
     for w in g[u]:
         if w not in seen:
             p = dfs_rec(g, w, v, seen | {w}) #union w with set seen
-            if not p is None: #if P != none
+            if p is not None: #if P != none
                 return [u]+p
              
     return None
