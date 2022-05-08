@@ -1,11 +1,12 @@
 # CS 350: Homework 5
 # Due: Week of 5/9
-# Name: 
+# Name: Alex Harris
 
 # You should not assume anything about the data for these problems
 # other than it's valid.
 # Adjacency lists might not be in any particular order
 # and graphs may not be connected.
+from collections import deque
 
 ############################################################################
 #
@@ -19,15 +20,36 @@
 # Should return a list of two components [[0,1,2],[3,4]]
 #
 # Running time?
-#
+# O[V+E]
 ############################################################################
 def components(g):
     """
     >>> components([[1,2], [0,2], [0,1], [4], [3]])
     [[0, 1, 2], [3, 4]]
     """
-    pass
+    connected = []
+    toAttach = []
+    i = 0
+    while i < len(g):
+        if i not in toAttach:
+            toAttach = dfs_rec(g[i], i, max(g[i]), {i})
+            connected.append(toAttach)
+        else:
+            i += 1
+        
+    return connected
 
+def dfs_rec(g, u, v, seen):
+    if u == v:
+        return [v]
+    
+    for w in g:
+        if w not in seen:
+            p = dfs_rec(g, w, v, seen | {w}) #union w with set seen
+            if p is not None: #if P != none
+                return [u]+p
+             
+    return None
 ############################################################################
 #
 # Problem 2
@@ -36,14 +58,35 @@ def components(g):
 # g is represented as an adjacency list
 #
 # Running time?
-#
+# O(V+E)
 ############################################################################
 def bipartite(g):
     """
     >>> bipartite([[3,4,7], [3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
     True
     """
-    pass
+    # >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
+    # False
+    # >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2,7], [1,2], [1], [0,2,4]])
+    # False
+    
+    seen = [False for i in range(len(g))]
+    c = [0] * len(g)
+    seen[0] = True
+    c[0] = False
+    
+    return bipFinder(g, 0, seen, c)
+            
+def bipFinder(g, u, seen, c):
+    for w in g[u]:
+        if seen[w] == False:
+            seen[w] = True
+            c[w] = not c[u]
+            if not bipFinder(g, w, seen, c):
+                return False
+        elif c[w] == c[u]:
+            return False
+    return True
 
 
 ############################################################################
@@ -56,14 +99,14 @@ def bipartite(g):
 # Running time?
 #
 ############################################################################
-def isForrest(g):
-    """
-    >>> isForrest([[1,2], [3,4], [5,6], [], [], [], []])
-    True
-    >>> isForrest([[1,2], [3,4], [5,4], [], [], []])
-    False
-    """
-    pass
+# def isForrest(g):
+#     """
+#     >>> isForrest([[1,2], [3,4], [5,6], [], [], [], []])
+#     True
+#     >>> isForrest([[1,2], [3,4], [5,4], [], [], []])
+#     False
+#     """
+#     pass
 
 ############################################################################
 #
@@ -80,12 +123,12 @@ def isForrest(g):
 # Running time?
 #
 ############################################################################
-def topsort(d):
-    """
-    >>> topsort([[1, 2], [3], [3], []])
-    [0, 1, 2, 3]
-    """
-    pass
+# def topsort(d):
+#     """
+#     >>> topsort([[1, 2], [3], [3], []])
+#     [0, 1, 2, 3]
+#     """
+#     pass
 
 ############################################################################
 #
@@ -97,12 +140,12 @@ def topsort(d):
 # Running time?
 #
 ############################################################################
-def scc(d):
-    """
-    >>> scc([[1], [2], [0,3], [1,2], [3,5,6], [4], [7], [8], [6]])
-    [[0, 1, 2, 3], [4, 5], [6, 7, 8]]
-    """
-    pass
+# def scc(d):
+#     """
+#     >>> scc([[1], [2], [0,3], [1,2], [3,5,6], [4], [7], [8], [6]])
+#     [[0, 1, 2, 3], [4, 5], [6, 7, 8]]
+#     """
+#     pass
 
 
 
@@ -110,7 +153,7 @@ def scc(d):
 #
 # Problem 6
 #
-# a. What doe we need to change about BFS/DFS if we use an adjacency matrix?
+# a. What do we need to change about BFS/DFS if we use an adjacency matrix?
 #
 # b. What is the running time for BFS/DFS if we use and adjacency matrix?
 #
@@ -118,3 +161,6 @@ def scc(d):
 #
 ############################################################################
 
+if __name__ == "__main__":        
+    import doctest
+    doctest.testmod()
