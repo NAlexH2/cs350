@@ -25,14 +25,14 @@ def bfs(g, u, v):
     parent = {u : u}
     queue = deque()
     queue.append(u)
-    while not queue:
+    while not queue.count():
         w = queue.popleft()
         for x in g[w]:
             if x not in parent:
                 parent[x] = w
                 queue.append(x)
                 if x == v:
-                    return makepath(parent)
+                    return makepath(parent, u, v)
                 
 def makepath(p, s, e):
     path = [e]
