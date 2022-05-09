@@ -22,33 +22,32 @@ from collections import deque
 # Running time?
 # O[V+E]
 ############################################################################
-def components(g):
-    """
-    >>> components([[1,2], [0,2], [0,1], [4], [3]])
-    [[0, 1, 2], [3, 4]]
-    """
-    connected = []
-    toAttach = []
-    i = 0
-    while i < len(g):
-        if i not in toAttach:
-            toAttach = dfs_rec(g[i], i, max(g[i]), {i})
-            connected.append(toAttach)
-        else:
-            i += 1
+# def components(g):
+#     """
+#     >>> components([[1,2], [0,2], [0,1], [4], [3]])
+#     [[0, 1, 2], [3, 4]]
+#     """
+#     connected = []
+#     toAttach = []
+#     i = 0
+#     while i < len(g):
+#         if i not in toAttach:
+#             toAttach = connectedDFS(g[i], i, max(g[i]), {i})
+#             connected.append(toAttach)
+#         else:
+#             i += 1
         
-    return connected
+#     return connected
 
-def dfs_rec(g, u, v, seen):
+def connectedDFS(g, u, v, seen):
     if u == v:
         return [v]
     
     for w in g:
         if w not in seen:
-            p = dfs_rec(g, w, v, seen | {w}) #union w with set seen
+            p = connectedDFS(g, w, v, seen | {w}) #union w with set seen
             if p is not None: #if P != none
                 return [u]+p
-             
     return None
 ############################################################################
 #
@@ -60,33 +59,34 @@ def dfs_rec(g, u, v, seen):
 # Running time?
 # O(V+E)
 ############################################################################
-def bipartite(g):
-    """
-    >>> bipartite([[3,4,7], [3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
-    True
-    """
-    # >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
-    # False
-    # >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2,7], [1,2], [1], [0,2,4]])
-    # False
+# def bipartite(g):
+#     """
+#     >>> bipartite([[3,4,7], [3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
+#     True
+#     >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
+#     False
+#     >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2,7], [1,2], [1], [0,2,4]])
+#     False
+#     """
+
     
-    seen = [False for i in range(len(g))]
-    c = [0] * len(g)
-    seen[0] = True
-    c[0] = False
+#     seen = [0] * len(g)
+#     c = [0] * len(g)
+#     seen[0] = True
+#     c[0] = False
     
-    return bipFinder(g, 0, seen, c)
+#     return bipFinder(g, 0, seen, c)
             
-def bipFinder(g, u, seen, c):
-    for w in g[u]:
-        if seen[w] == False:
-            seen[w] = True
-            c[w] = not c[u]
-            if not bipFinder(g, w, seen, c):
-                return False
-        elif c[w] == c[u]:
-            return False
-    return True
+# def bipFinder(g, u, seen, c): #modified depth first search
+#     for w in g[u]:
+#         if seen[w] == False:
+#             seen[w] = True
+#             c[w] = not c[u]
+#             if not bipFinder(g, w, seen, c):
+#                 return False
+#         elif c[w] == c[u]:
+#             return False
+#     return True
 
 
 ############################################################################
@@ -97,16 +97,41 @@ def bipFinder(g, u, seen, c):
 # g is represented by a adjacency list.
 #
 # Running time?
-#
+# O(V+E)
 ############################################################################
 # def isForrest(g):
 #     """
-#     >>> isForrest([[1,2], [3,4], [5,6], [], [], [], []])
+#     >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4]])
 #     True
-#     >>> isForrest([[1,2], [3,4], [5,4], [], [], []])
+#     >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4],[11],[10]])
+#     True
+#     >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6,8],[4,7],[4]])
+#     False
+#     >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4],[11,12],[10,12],[10,11]])
 #     False
 #     """
-#     pass
+
+#     seen = [-1] * len(g)
+#     if forestFinder(g, 0, seen, -1) == True:
+#         return False
+    
+#     for i in range(len(seen)):
+#         if seen[i] == -1:
+#             if forestFinder(g, i, seen, -1) == True:
+#                 return False
+#         if seen[i] == False:            
+#             return False
+#     return True
+
+# def forestFinder(g, u, seen, p): #modified depth first search
+#     seen[u] = True
+#     for w in g[u]:
+#         if seen[w] != True:
+#             if forestFinder(g, w, seen, u) == True:
+#                 return True
+#         elif w != p:
+#             return True
+#     return False
 
 ############################################################################
 #
@@ -121,14 +146,24 @@ def bipFinder(g, u, seen, c):
 # c cannot connect to b, b cannot connect to c, and a cannot connect to d
 #
 # Running time?
-#
+# O(V+E)
 ############################################################################
-# def topsort(d):
-#     """
-#     >>> topsort([[1, 2], [3], [3], []])
-#     [0, 1, 2, 3]
-#     """
-#     pass
+def topsort(d):
+    """
+    >>> topsort([[1, 2], [3], [3], []])
+    [0, 1, 2, 3]
+    """
+    return topMaker(d, 0, [0])
+
+def topMaker(d, u, sT): #modified depth first search
+    for w in d[u]:
+        if w == []:
+            return
+        sT += [w]
+        if w == d[u][len(d[u])-1]:
+            topMaker(d, w, sT)
+            
+    return sT
 
 ############################################################################
 #
@@ -140,13 +175,49 @@ def bipFinder(g, u, seen, c):
 # Running time?
 #
 ############################################################################
-# def scc(d):
-#     """
-#     >>> scc([[1], [2], [0,3], [1,2], [3,5,6], [4], [7], [8], [6]])
-#     [[0, 1, 2, 3], [4, 5], [6, 7, 8]]
-#     """
-#     pass
+def scc(d):
+    """
+    >>> scc([[1], [2], [0,3], [1,2], [3,5,6], [4], [7], [8], [6]])
+    [[0, 1, 2, 3], [4, 5], [6, 7, 8]]
+    """
+    if not d:
+        return
+    seen = [-1] * len(d)
+    i = 0
+    swapDi = [[] for i in d]
+    swapDi = dTranspose(d, swapDi) #change the directions on digraph d
+    connected = []
+    toAttach = []
+    
+    # for i in range(len(d)):
+    #         connected.connectedDFS(d[i], i, max(d[i]), {i})
+    #         connected.append(toAttach)
 
+    while i in range(len(d)):
+        if seen[i] == True:
+            i += 1
+        else:
+            connected = connected + [sccFinder(d, i, seen, [i])]
+            
+    
+    return connected
+
+def sccFinder(d, u, seen, scc):
+    seen[u] = True
+    
+    for w in d[u]:
+        if seen[w] != True:
+            scc.append(w)
+            sccFinder(d,w,seen,scc)
+    
+    return scc
+
+def dTranspose(d, sD):
+    for i in d:
+        for j in i:
+            sD[j] += [d.index(i)]
+    return sD
+    
 
 
 ############################################################################
@@ -154,11 +225,14 @@ def bipFinder(g, u, seen, c):
 # Problem 6
 #
 # a. What do we need to change about BFS/DFS if we use an adjacency matrix?
+# A: 
 #
 # b. What is the running time for BFS/DFS if we use and adjacency matrix?
+# A: The running time is n^2
 #
 # c. Give an example of a weighted graph where BFS doesn't return the shortes path.
-#
+# When the sum of a set of particular edges weighs less than the fewest edges to a point.
+# 
 ############################################################################
 
 if __name__ == "__main__":        
