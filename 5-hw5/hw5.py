@@ -39,16 +39,16 @@ from collections import deque
         
 #     return connected
 
-def connectedDFS(g, u, v, seen):
-    if u == v:
-        return [v]
+# def connectedDFS(g, u, v, seen):
+#     if u == v:
+#         return [v]
     
-    for w in g:
-        if w not in seen:
-            p = connectedDFS(g, w, v, seen | {w}) #union w with set seen
-            if p is not None: #if P != none
-                return [u]+p
-    return None
+#     for w in g:
+#         if w not in seen:
+#             p = connectedDFS(g, w, v, seen | {w}) #union w with set seen
+#             if p is not None: #if P != none
+#                 return [u]+p
+#     return None
 ############################################################################
 #
 # Problem 2
@@ -148,14 +148,14 @@ def connectedDFS(g, u, v, seen):
 # Running time?
 # O(V+E)
 ############################################################################
-def topsort(d):
-    """
-    >>> topsort([[1, 2], [3], [3], []])
-    [0, 1, 2, 3]
-    """
-    return topMaker(d, 0, [0])
+# def topsort(d):
+#     """
+#     >>> topsort([[1, 2], [3], [3], []])
+#     [0, 1, 2, 3]
+#     """
+#     return topMaker(d, 0, [0])
 
-def topMaker(d, u, sT): #modified depth first search
+def topMaker(d, u, sT):
     for w in d[u]:
         if w == []:
             return
@@ -170,7 +170,11 @@ def topMaker(d, u, sT): #modified depth first search
 # Problem 5
 #
 # write a function to determine the strongly connected components of digraph d.
-# Just like the components example, you should return a list of strongly connected components.
+# Just like the components example, you should return a list of strongly 
+# connected components.
+#
+# Make a DAG using topSort
+# loop over the verticies in topSort
 #
 # Running time?
 #
@@ -184,39 +188,46 @@ def scc(d):
         return
     seen = [-1] * len(d)
     i = 0
-    swapDi = [[] for i in d]
-    swapDi = dTranspose(d, swapDi) #change the directions on digraph d
+    dT = [[] for i in d]
+    dT = dTranspose(d, dT) #change the directions on digraph d
     connected = []
-    toAttach = []
-    
-    # for i in range(len(d)):
-    #         connected.connectedDFS(d[i], i, max(d[i]), {i})
-    #         connected.append(toAttach)
 
-    while i in range(len(d)):
-        if seen[i] == True:
-            i += 1
-        else:
-            connected = connected + [sccFinder(d, i, seen, [i])]
+    for i in range(len(seen)):
+        if seen[i] != True:
+            connected = connected + [sccTopSort(d, i, seen, [i])]
             
+    seen = [-1] * len(d)
     
-    return connected
+    connected.reverse()
+    sccFound = []
+    
+    for i in range(len(seen)):
+        if seen[i] != True:
+            sccFound.append(sccFinder(dT, connected[i], seen))
+    
+    
+    
+    return sccFound
 
-def sccFinder(d, u, seen, scc):
+def sccTopSort(d, u, seen, scc):
     seen[u] = True
-    
     for w in d[u]:
         if seen[w] != True:
             scc.append(w)
-            sccFinder(d,w,seen,scc)
+            sccTopSort(d,w,seen,scc)
     
     return scc
 
-def dTranspose(d, sD):
+def sccFinder(dT, c, seen):
+    #traverse the transpose starting using position c, make strongly
+    #connected components, return them, use outside for loop until all is true.
+    pass
+
+def dTranspose(d, dT):
     for i in d:
         for j in i:
-            sD[j] += [d.index(i)]
-    return sD
+            dT[j] += [d.index(i)]
+    return dT
     
 
 
@@ -225,13 +236,14 @@ def dTranspose(d, sD):
 # Problem 6
 #
 # a. What do we need to change about BFS/DFS if we use an adjacency matrix?
-# A: 
+# A: Have to loop through all other points in the row to see if there is
+# an edge between the source and all the other points.
 #
 # b. What is the running time for BFS/DFS if we use and adjacency matrix?
 # A: The running time is n^2
 #
 # c. Give an example of a weighted graph where BFS doesn't return the shortes path.
-# When the sum of a set of particular edges weighs less than the fewest edges to a point.
+# A: When the sum of a set of particular edges weighs less than the fewest edges to a point.
 # 
 ############################################################################
 
