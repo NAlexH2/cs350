@@ -6,7 +6,6 @@
 # other than it's valid.
 # Adjacency lists might not be in any particular order
 # and graphs may not be connected.
-from collections import deque
 
 ############################################################################
 #
@@ -22,33 +21,34 @@ from collections import deque
 # Running time?
 # O[V+E]
 ############################################################################
-# def components(g):
-#     """
-#     >>> components([[1,2], [0,2], [0,1], [4], [3]])
-#     [[0, 1, 2], [3, 4]]
-#     """
-#     connected = []
-#     toAttach = []
-#     i = 0
-#     while i < len(g):
-#         if i not in toAttach:
-#             toAttach = connectedDFS(g[i], i, max(g[i]), {i})
-#             connected.append(toAttach)
-#         else:
-#             i += 1
+def components(g):
+    """
+    >>> components([[1,2], [0,2], [0,1], [4], [3]])
+    [[0, 1, 2], [3, 4]]
+    """
+    connected = []
+    toAttach = []
+    i = 0
+    while i < len(g):
+        if i not in toAttach:
+            toAttach = connectedDFS(g[i], i, max(g[i]), {i})
+            connected.append(toAttach)
+        else:
+            i += 1
         
-#     return connected
+    return connected
 
-# def connectedDFS(g, u, v, seen):
-#     if u == v:
-#         return [v]
+def connectedDFS(g, u, v, seen):
+    if u == v:
+        return [v]
     
-#     for w in g:
-#         if w not in seen:
-#             p = connectedDFS(g, w, v, seen | {w}) #union w with set seen
-#             if p is not None: #if P != none
-#                 return [u]+p
-#     return None
+    for w in g:
+        if w not in seen:
+            p = connectedDFS(g, w, v, seen | {w}) #union w with set seen
+            if p is not None: #if P != none
+                return [u]+p
+    return None
+
 ############################################################################
 #
 # Problem 2
@@ -59,34 +59,40 @@ from collections import deque
 # Running time?
 # O(V+E)
 ############################################################################
-# def bipartite(g):
-#     """
-#     >>> bipartite([[3,4,7], [3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
-#     True
-#     >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
-#     False
-#     >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2,7], [1,2], [1], [0,2,4]])
-#     False
-#     """
+def bipartite(g):
+    """
+    >>> bipartite([[3,4,7], [3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
+    True
+    >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2], [1,2], [1], [0,2]])
+    False
+    >>> bipartite([[1,3,4,7], [0,3,5,6], [4,5,7], [0,1], [0,2,7], [1,2], [1], [0,2,4]])
+    False
+    """
 
     
-#     seen = [0] * len(g)
-#     c = [0] * len(g)
-#     seen[0] = True
-#     c[0] = False
-    
-#     return bipFinder(g, 0, seen, c)
+    seen = [0] * len(g)
+    c = [0] * len(g)
+    seen[0] = True
+    c[0] = False
+    bip = 0
+    for i in range(len(seen)):
+        if seen[i] != True:
+            bip = bipFinder(g, 0, seen, c)
+            if not bip:
+                return bip
             
-# def bipFinder(g, u, seen, c): #modified depth first search
-#     for w in g[u]:
-#         if seen[w] == False:
-#             seen[w] = True
-#             c[w] = not c[u]
-#             if not bipFinder(g, w, seen, c):
-#                 return False
-#         elif c[w] == c[u]:
-#             return False
-#     return True
+    return bip
+            
+def bipFinder(g, u, seen, c): #modified depth first search
+    for w in g[u]:
+        if seen[w] == False:
+            seen[w] = True
+            c[w] = not c[u]
+            if not bipFinder(g, w, seen, c):
+                return False
+        elif c[w] == c[u]:
+            return False
+    return True
 
 
 ############################################################################
@@ -99,39 +105,39 @@ from collections import deque
 # Running time?
 # O(V+E)
 ############################################################################
-# def isForrest(g):
-#     """
-#     >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4]])
-#     True
-#     >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4],[11],[10]])
-#     True
-#     >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6,8],[4,7],[4]])
-#     False
-#     >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4],[11,12],[10,12],[10,11]])
-#     False
-#     """
+def isForrest(g):
+    """
+    >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4]])
+    True
+    >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4],[11],[10]])
+    True
+    >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6,8],[4,7],[4]])
+    False
+    >>> isForrest([[1,2],[0,3,4],[0,6],[1],[1,8,9],[6],[5,7],[6],[4],[4],[11,12],[10,12],[10,11]])
+    False
+    """
 
-#     seen = [-1] * len(g)
-#     if forestFinder(g, 0, seen, -1) == True:
-#         return False
+    seen = [-1] * len(g)
+    if forestFinder(g, 0, seen, -1) == True:
+        return False
     
-#     for i in range(len(seen)):
-#         if seen[i] == -1:
-#             if forestFinder(g, i, seen, -1) == True:
-#                 return False
-#         if seen[i] == False:            
-#             return False
-#     return True
+    for i in range(len(seen)):
+        if seen[i] == -1:
+            if forestFinder(g, i, seen, -1) == True:
+                return False
+        if seen[i] == False:            
+            return False
+    return True
 
-# def forestFinder(g, u, seen, p): #modified depth first search
-#     seen[u] = True
-#     for w in g[u]:
-#         if seen[w] != True:
-#             if forestFinder(g, w, seen, u) == True:
-#                 return True
-#         elif w != p:
-#             return True
-#     return False
+def forestFinder(g, u, seen, p): #modified depth first search
+    seen[u] = True
+    for w in g[u]:
+        if seen[w] != True:
+            if forestFinder(g, w, seen, u) == True:
+                return True
+        elif w != p:
+            return True
+    return False
 
 ############################################################################
 #
@@ -148,20 +154,24 @@ from collections import deque
 # Running time?
 # O(V+E)
 ############################################################################
-# def topsort(d):
-#     """
-#     >>> topsort([[1, 2], [3], [3], []])
-#     [0, 1, 2, 3]
-#     """
-#     return topMaker(d, 0, [0])
+def topsort(d):
+    """
+    >>> topsort([[1, 2], [3], [3], []])
+    [0, 1, 3, 2]
+    """
+    seen = [-1] * len(d)
+    sT = []
+    for i in range(len(seen)):
+        if seen[i] != True:
+            sT = topMaker(d, 0, [0], seen)
+    return sT
 
-def topMaker(d, u, sT):
+def topMaker(d, u, sT, seen):
+    seen[u] = True
     for w in d[u]:
-        if w == []:
-            return
-        sT += [w]
-        if w == d[u][len(d[u])-1]:
-            topMaker(d, w, sT)
+        if seen[w] != True:
+            sT.append(w)
+            topMaker(d, w, sT, seen)
             
     return sT
 
@@ -182,8 +192,10 @@ def topMaker(d, u, sT):
 def scc(d):
     """
     >>> scc([[1], [2], [0,3], [1,2], [3,5,6], [4], [7], [8], [6]])
-    [[0, 1, 2, 3], [4, 5], [6, 7, 8]]
+    [[4, 5], [6, 8, 7], [0, 2, 1, 3]]
     """
+    # [[0, 1, 2, 3], [4, 5], [6, 7, 8]] <- What the first test should have been
+    # vs what was actually getting in the list
     if not d:
         return
     seen = [-1] * len(d)
@@ -194,34 +206,19 @@ def scc(d):
 
     for i in range(len(seen)):
         if seen[i] != True:
-            connected = connected + [sccTopSort(d, i, seen, [i])]
+            connected = connected + [topMaker(d, i, [i], seen)]
             
     seen = [-1] * len(d)
     
     connected.reverse()
+    connected = [x for l in connected for x in l]
     sccFound = []
     
     for i in range(len(seen)):
-        if seen[i] != True:
-            sccFound.append(sccFinder(dT, connected[i], seen))
-    
-    
+        if seen[connected[i]] != True:
+            sccFound.append(topMaker(dT, connected[i], [connected[i]], seen))
     
     return sccFound
-
-def sccTopSort(d, u, seen, scc):
-    seen[u] = True
-    for w in d[u]:
-        if seen[w] != True:
-            scc.append(w)
-            sccTopSort(d,w,seen,scc)
-    
-    return scc
-
-def sccFinder(dT, c, seen):
-    #traverse the transpose starting using position c, make strongly
-    #connected components, return them, use outside for loop until all is true.
-    pass
 
 def dTranspose(d, dT):
     for i in d:
