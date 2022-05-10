@@ -187,7 +187,7 @@ def topMaker(d, u, sT, seen):
 # loop over the verticies in topSort
 #
 # Running time?
-#
+# O(V+E)
 ############################################################################
 def scc(d):
     """
@@ -206,7 +206,7 @@ def scc(d):
 
     for i in range(len(seen)):
         if seen[i] != True:
-            connected = connected + [topMaker(d, i, [i], seen)]
+            connected.append(topMaker(d, i, [i], seen))
             
     seen = [-1] * len(d)
     
