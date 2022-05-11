@@ -43,7 +43,30 @@ def warshall(g):
 ########End example
 
 
+#####Longest Common Substring
+###Looking at two strings, the longest possible string compared against the two
+#O(s * t)
+def LCS(s,t):
+    '''What even is testing?'''
+    T = [[0]* (range(len(t))) for i in s]
+    largest = 0
+    for i in range(len(s)):
+        for j in range(len(t)):
+            if s[i] == t[j]:
+                if i == 0 or j == 0:
+                    T[i][j] = 1
+                else:
+                    T[i][j] = T[i-1][j-1] + 1
+                largest = max(largest, T[i][j])
+    return largest
 
+    
+####Subset Sum
+##Find some subset of ints that add up to target T
+def subsetSum(xs, i):
+    '''Didn't have time for this one'''
+    pass
+###End example
 
 
 
