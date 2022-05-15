@@ -27,10 +27,37 @@ def minpath(dag, u, v):
 
 #######End example
 
-#####Warshall algo example
+
+#####Warshall Algo
+def warshall(adj):
+    T = adj
+    for w in range(len(adj)):
+        for u in range(len(adj)):
+            for v in range(len(adj)):
+                if T[u][w] == 1 and T[w][v] == 1:
+                    T[u][v] = 1
+
+    return T
+
+
+###Shortest possible path changem-up version:
+def warshall2(g):
+    n = len(g)
+    for w in range(n):
+        for u in range(n):
+            for v in range(n):
+                g[u][v] = min(g[u][v], g[u][w] + g[w][v])
+                
+    return g
+#######End example
+
+
+
+
+####Floyd-Warshall algo example
 #changing possible paths in a adj. matrix IF there is actually a path
 #from u to v
-def warshall(g):
+def floyd_warshall(g):
     '''i have no idea what to put for a test case here...'''
     n = len(g)
     for w in range(n):

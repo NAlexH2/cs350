@@ -1,8 +1,9 @@
 # CS 350: Homework 6
 # Due: Week of 6/16
-# Name: Alex Harris 
+# Name: Alex Harris
+    
 
-
+import math
 
 def machine(data, code):
     i = 0
@@ -28,7 +29,8 @@ def machine(data, code):
 # I've constructed a new data processing language that I call addmul.
 # It is a very simple language, programs in addmul consist of two instructions.
 # ADD take a value from the data stream and adds it to the current total
-# MUL takes the next two number from the current data stream, multiplies them together
+# MUL takes the next two number from the current data stream, multiplies them 
+# together,
 # and adds them to the total.
 # That's it.
 #
@@ -47,15 +49,41 @@ def machine(data, code):
 # machine([2,3,4], ["ADD","MULL]) 
 # to run your program
 #
-# running time: O(n)
+# you can use
+# machine(numbers, largestProgram(numbers))
+# to test your algorithm on any list of numbers.
+#
+# running time: 
 ###########################################################################
-
-def largestProgram(data):
-    """
-    >>> largestProgram([2,3,5])
-    ["ADD", "MUL"]
-    """
-    pass
+# def largestProgram(data):
+#     """
+#     >>> largestProgram([2,3,5])
+#     ['ADD', 'MUL']
+#     >>> largestProgram([])
+#     """
+#     if data is []:
+#         return
+#     total = 0
+#     # memo = [[None for x in range(len(data))] for z in range(len(data))]  #n x n matrix
+#     memo = [[None] * len(data)]
+#     i = j = 0
+#     # while i < len(memo):
+#     #     while j < len(memo[i]):
+#     #         if i == j:
+#     #             memo[i][j] = (data[i],"ADD")
+#     #             j += 1
+#     #         else:
+#     #             memo[i][j] = (data[i]*data[j], "MUL") 
+#     #             j += 1
+#     #         if j >= len(memo[i]):
+#     #             j = 0
+#     #             i += 1
+#     #             if i >= len(memo):
+#     #                 memo.pop(0)
+#     #                 return memo
+            
+     
+#     return memo
 
 
 ###########################################################################
@@ -75,16 +103,20 @@ def largestProgram(data):
 #      [  3,  -1,   1,   0] ]
 # 
 #
-# Running Time:
+# Running Time: Theta(n^3)
 ###########################################################################
-
 def floyd(g):
     """
-    >>> floyd([ [0, math.inf, -2, math.inf], [4, 0, 3, math.inf], [math.inf, math.inf, 0, 2], [math.inf, -1, math.inf, 0]])
-    [ [  0,  -1,  -2,   0], [  4,   0,   2,   4], [  5,   1,   0,   2], [  3,  -1,   1,   0] ]
+    >>> floyd([[0, math.inf, -2, math.inf],[4, 0, 3, math.inf],[math.inf, math.inf, 0, 2],[math.inf, -1, math.inf, 0]])
+    [[0, -1, -2, 0], [4, 0, 2, 4], [5, 1, 0, 2], [3, -1, 1, 0]]
     """
-    pass
-
+    n = len(g)
+    for w in range(n):
+        for u in range(n):
+            for v in range(n):
+                g[u][v] = min(g[u][v], g[u][w] + g[w][v])
+                
+    return g
 
 ###########################################################################
 # Problem 3
@@ -100,14 +132,16 @@ def floyd(g):
 # to maximize the profit.
 # You should return the maximum profit you can make.
 #
+# Running Time:
 ###########################################################################
+# def rods(weights, prices, d):
+#     """
+#     >>> rods([3,4,5,6,7], [2,3,6,8,11], 20)
+#     30
+#     """
+#     pass
 
-def rods(weights, prices, d):
-    """
-    >>> rods([3,4,5,6,7], [2,3,6,8,11], 20)
-    30
-    """
-    pass
+
 
 ############################################################################
 # Problem 4: Parenthesizing matrices.
@@ -135,13 +169,15 @@ def rods(weights, prices, d):
 # 
 # Running time:
 ############################################################################
-def matrixParens(sizes):
-    """
-    >>> matrixParens([(3,5), (5,4), (4,7)])
-    144
-    """
-    pass
+# def matrixParens(sizes):
+#     """
+#     >>> matrixParens([(3,5), (5,4), (4,7)])
+#     144
+#     """
+#     pass
 
-if __name__ == "__main__":        
+
+
+if __name__ == "__main__":
     import doctest
     doctest.testmod()
