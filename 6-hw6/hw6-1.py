@@ -55,36 +55,34 @@ def machine(data, code):
 # machine(numbers, largestProgram(numbers))
 # to test your algorithm on any list of numbers.
 #
-# running time: 
+# running time: O(n*Data)
 ###########################################################################
+# x1, x2, x3
+# largestp(x1:x2:xs)
+# Iterative
+# x1 + bigseq(x2:xs) OR x1x2 + bigseq(xs)
+# start with end and contiue
 # def largestProgram(data):
 #     """
 #     >>> largestProgram([2,3,5])
 #     ['ADD', 'MUL']
-#     >>> largestProgram([])
 #     """
 #     if data is []:
 #         return
 #     total = 0
-#     # memo = [[None for x in range(len(data))] for z in range(len(data))]  #n x n matrix
-#     memo = [[None] * len(data)]
-#     i = j = 0
-#     # while i < len(memo):
-#     #     while j < len(memo[i]):
-#     #         if i == j:
-#     #             memo[i][j] = (data[i],"ADD")
-#     #             j += 1
-#     #         else:
-#     #             memo[i][j] = (data[i]*data[j], "MUL") 
-#     #             j += 1
-#     #         if j >= len(memo[i]):
-#     #             j = 0
-#     #             i += 1
-#     #             if i >= len(memo):
-#     #                 memo.pop(0)
-#     #                 return memo
-            
-     
+#     memo = [] * len(data)
+    
+#     last = len(data)-1
+#     for i in range(last,0,-1):
+#         if i-1 > 0:
+#             if (data[i] * data[i-1]) >= data[i]:
+#                 memo.append('MUL')
+#             else:
+#                 memo.append('ADD')
+#         else:
+#             memo.append('ADD')
+        
+#     memo.reverse()
 #     return memo
 
 
@@ -117,7 +115,6 @@ def machine(data, code):
 #         for u in range(n):
 #             for v in range(n):
 #                 g[u][v] = min(g[u][v], g[u][w] + g[w][v])
-#                 # look in the "neighborhood" of this path, not the vertex itself?
                 
 #     return g
 
@@ -135,7 +132,7 @@ def machine(data, code):
 # to maximize the profit.
 # You should return the maximum profit you can make.
 #
-# Running Time:
+# Running Time: O(n*d)
 ###########################################################################
 def rods(lengths, prices, d):
     """
@@ -147,11 +144,13 @@ def rods(lengths, prices, d):
 
     return sum(profit)
 
+#store profit into table after recursive call
+#identify largest possible cut, do the math on d with that cut, recurse again
+#maxval = rodsrec(ln[i]) + prc[i]
+#must be a positive value to cut
 def rodsrec(ln, prc, d, pro):
     if d == 0:
         return
-    for i in ln:
-        pro += prc[i.index()]
     return pro
 
 
@@ -181,6 +180,19 @@ def rodsrec(ln, prc, d, pro):
 # 
 # Running time:
 ############################################################################
+# Similar substring problem potentially
+# iterative matrix solution
+# diagnol mathmatical operations
+# A = 2x3, B = 3x5, C = 5x4
+#    A  B   C
+# A  0  30 1200
+# B  N  0  60
+# C  N  N  0
+# 
+# A*B = 2*3*5 = 30
+# B*C = 3*5*4 = 60
+# AB*C = 30(2*5*4) = 1200
+# A*BC = 60(2*3*4) = 1440
 # def matrixParens(sizes):
 #     """
 #     >>> matrixParens([(3,5), (5,4), (4,7)])
