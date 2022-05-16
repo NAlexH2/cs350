@@ -66,20 +66,24 @@ def knapsack_rec(it, i, c, memo):
 
 #Making change problem (slide 26)
 #given target amount of t, give fewest coins possible
-#cs = coin denmoinations, t = target value
+#coins = coin denmoinations, cap = target value
 # running time = O()
-def makeChange(cs,t):
-    pass
 
-def mC(cs, t):
-    if t == 0:
-        return 0
-    fewCoins = t
-    for c in cs:
-        coins = mC(cs,t-c)+1
-        fewCoins = min(fewCoins, coins)
-    
-    return fewCoins
+def change(coins,cap):
+    memos = [None] * (cap+1)
+    return change_memo(coins,cap,memos)
+
+def change_memo(coins,t,memos):
+    if memos[t] is not None:
+        return memos[t]
+    minCoins = t
+    for val in coins:
+        count = 0
+        if t >= val:
+            count = change_memo(coins, t-val, memos) + 1
+    minCoins = min(minCoins,count)
+    memos[t] = minCoins
+    return 
         
 
 

@@ -3,7 +3,9 @@
 # Name: Alex Harris
     
 
+from ctypes import memset
 import math
+from operator import index
 
 def machine(data, code):
     i = 0
@@ -105,18 +107,19 @@ def machine(data, code):
 #
 # Running Time: Theta(n^3)
 ###########################################################################
-def floyd(g):
-    """
-    >>> floyd([[0, math.inf, -2, math.inf],[4, 0, 3, math.inf],[math.inf, math.inf, 0, 2],[math.inf, -1, math.inf, 0]])
-    [[0, -1, -2, 0], [4, 0, 2, 4], [5, 1, 0, 2], [3, -1, 1, 0]]
-    """
-    n = len(g)
-    for w in range(n):
-        for u in range(n):
-            for v in range(n):
-                g[u][v] = min(g[u][v], g[u][w] + g[w][v])
+# def floyd(g):
+#     """
+#     >>> floyd([[0, math.inf, -2, math.inf],[4, 0, 3, math.inf],[math.inf, math.inf, 0, 2],[math.inf, -1, math.inf, 0]])
+#     [[0, -1, -2, 0], [4, 0, 2, 4], [5, 1, 0, 2], [3, -1, 1, 0]]
+#     """
+#     n = len(g)
+#     for w in range(n):
+#         for u in range(n):
+#             for v in range(n):
+#                 g[u][v] = min(g[u][v], g[u][w] + g[w][v])
+#                 # look in the "neighborhood" of this path, not the vertex itself?
                 
-    return g
+#     return g
 
 ###########################################################################
 # Problem 3
@@ -134,13 +137,22 @@ def floyd(g):
 #
 # Running Time:
 ###########################################################################
-# def rods(weights, prices, d):
-#     """
-#     >>> rods([3,4,5,6,7], [2,3,6,8,11], 20)
-#     30
-#     """
-#     pass
+def rods(lengths, prices, d):
+    """
+    >>> rods([3,4,5,6,7], [2,3,6,8,11], 20)
+    30
+    """
+    profit = [] #profit per cut
+    rodsrec(lengths, prices, d, profit)
 
+    return sum(profit)
+
+def rodsrec(ln, prc, d, pro):
+    if d == 0:
+        return
+    for i in ln:
+        pro += prc[i.index()]
+    return pro
 
 
 ############################################################################
