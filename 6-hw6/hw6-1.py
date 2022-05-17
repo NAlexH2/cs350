@@ -197,25 +197,30 @@ def rodsrec(ln, prc, d):
 # diagnol mathmatical operations
 # A = 2x3, B = 3x5, C = 5x4
 #    A  B   C
-# A  0  30 1200
+# A  0  30 70
 # B  N  0  60
 # C  N  N  0
 # 
 # A*B = 2*3*5 = 30
 # B*C = 3*5*4 = 60
-# AB*C = 30(2*5*4) = 1200
-# A*BC = 60(2*3*4) = 1440
+# AB*C = 30+(2*5*4) = 70 <-
+# A*BC = 60+(2*3*4) = 84
 ############################################################################
 def matrixParens(s):
     """
     >>> matrixParens([(3,5), (5,4), (4,7)])
-    144
-    >>> matrixParens([(3,5), (5,4), (4,7)])
-    3600
+    120
     """
-    # I'm not sure why, but following the above logic I got from office hours with Steven
-    # the final result is *way* higher than what the test case is showing. I've given both
-    # tests of what Steven says it should be and what I was getting.
+    # A = 3x5, B = 5x4, C = 4x7
+    #    A  B   C
+    # A  0  60 120
+    # B  N  0  140
+    # C  N  N  0
+    # 
+    # A*B = 3*5*4 = 60
+    # B*C = 5*4*7 = 140
+    # AB*C = 60+(3*5*4) = 120 <-
+    # A*BC = 140+(3*4*7) = 224
     memo = [[0 for x in range(len(s))] for z in range(len(s))]
     memo2 = []
 
@@ -232,8 +237,8 @@ def matrixParens(s):
                             memo2 += [[s[i][0]]+[s[i+1][1]]+[s[i+2][1]]]
                         
             if i == len(memo)-1 and j == len(memo[i])-1:
-                memo[0][-1] = min(max(memo[0])*math.prod(memo2[0]), \
-                                  max(memo[1])*math.prod(memo2[-1]))
+                memo[0][-1] = min(max(memo[0])+math.prod(memo2[0]), \
+                                  max(memo[1])+math.prod(memo2[-1]))
     # bestsolution = 
     return memo[0][-1]
 
