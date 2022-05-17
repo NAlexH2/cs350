@@ -3,9 +3,7 @@
 # Name: Alex Harris
     
 
-from ctypes import memset
 import math
-from operator import index
 
 def machine(data, code):
     i = 0
@@ -57,33 +55,39 @@ def machine(data, code):
 #
 # running time: O(n*Data)
 ###########################################################################
+
+################ Notes from office hours with Steven #######################
 # x1, x2, x3
 # largestp(x1:x2:xs)
 # Iterative
 # x1 + bigseq(x2:xs) OR x1x2 + bigseq(xs)
 # start with end and contiue
-# def largestProgram(data):
-#     """
-#     >>> largestProgram([2,3,5])
-#     ['ADD', 'MUL']
-#     """
-#     if data is []:
-#         return
-#     total = 0
-#     memo = [] * len(data)
+############################################################################
+def largestProgram(data):
+    """
+    >>> largestProgram([2,3,5])
+    ['ADD', 'MUL']
+    """
+    if data is []:
+        return
+    total = 0
+    memo = [] * len(data)
     
-#     last = len(data)-1
-#     for i in range(last,0,-1):
-#         if i-1 > 0:
-#             if (data[i] * data[i-1]) >= data[i]:
-#                 memo.append('MUL')
-#             else:
-#                 memo.append('ADD')
-#         else:
-#             memo.append('ADD')
+    i = len(data)-1
+    while i >= 0:
+        if i-1 > 0:
+            if (data[i] * data[i-1]) >= data[i]:
+                memo.append('MUL')
+                i -= 2
+            else:
+                memo.append('ADD')
+                i -= 1
+        else:
+            memo.append('ADD')
+            i -= 1
         
-#     memo.reverse()
-#     return memo
+    memo.reverse()
+    return memo
 
 
 ###########################################################################
@@ -105,18 +109,18 @@ def machine(data, code):
 #
 # Running Time: Theta(n^3)
 ###########################################################################
-# def floyd(g):
-#     """
-#     >>> floyd([[0, math.inf, -2, math.inf],[4, 0, 3, math.inf],[math.inf, math.inf, 0, 2],[math.inf, -1, math.inf, 0]])
-#     [[0, -1, -2, 0], [4, 0, 2, 4], [5, 1, 0, 2], [3, -1, 1, 0]]
-#     """
-#     n = len(g)
-#     for w in range(n):
-#         for u in range(n):
-#             for v in range(n):
-#                 g[u][v] = min(g[u][v], g[u][w] + g[w][v])
+def floyd(g):
+    """
+    >>> floyd([[0, math.inf, -2, math.inf],[4, 0, 3, math.inf],[math.inf, math.inf, 0, 2],[math.inf, -1, math.inf, 0]])
+    [[0, -1, -2, 0], [4, 0, 2, 4], [5, 1, 0, 2], [3, -1, 1, 0]]
+    """
+    n = len(g)
+    for w in range(n):
+        for u in range(n):
+            for v in range(n):
+                g[u][v] = min(g[u][v], g[u][w] + g[w][v])
                 
-#     return g
+    return g
 
 ###########################################################################
 # Problem 3
@@ -133,25 +137,31 @@ def machine(data, code):
 # You should return the maximum profit you can make.
 #
 # Running Time: O(n*d)
-###########################################################################
+############################################################################
+
+################ Notes from office hours with Steven #######################
+#store profit into table after recursive call
+#identify largest possible cut, do the math on d with that cut, recurse again
+#maxval = max(something, rodsrec(ln[i]) + prc[i]) ??? other args in function call
+#must be a positive value to cut
+############################################################################
 def rods(lengths, prices, d):
     """
     >>> rods([3,4,5,6,7], [2,3,6,8,11], 20)
     30
     """
-    profit = [] #profit per cut
-    rodsrec(lengths, prices, d, profit)
+    val = rodsrec(lengths, prices, d)
+    return val
 
-    return sum(profit)
-
-#store profit into table after recursive call
-#identify largest possible cut, do the math on d with that cut, recurse again
-#maxval = rodsrec(ln[i]) + prc[i]
-#must be a positive value to cut
-def rodsrec(ln, prc, d, pro):
-    if d == 0:
-        return
-    return pro
+def rodsrec(ln, prc, d):
+    if d <= 0:
+        return 0
+    profit = 0
+    for i in range(len(ln)):
+        profit = max(profit, rodsrec(ln[i+1:], prc[i+1:], d-ln[i]) + prc[i])
+        d -= ln[i]
+    
+    return profit
 
 
 ############################################################################
@@ -178,8 +188,10 @@ def rodsrec(ln, prc, d, pro):
 # example [(3,5), (5,4), (4,7)]
 # is 3*5*4 + 3*4*7 = 144
 # 
-# Running time:
+# Running time: O(n^2)
 ############################################################################
+
+################ Notes from office hours with Steven #########################
 # Similar substring problem potentially
 # iterative matrix solution
 # diagnol mathmatical operations
@@ -193,12 +205,37 @@ def rodsrec(ln, prc, d, pro):
 # B*C = 3*5*4 = 60
 # AB*C = 30(2*5*4) = 1200
 # A*BC = 60(2*3*4) = 1440
-# def matrixParens(sizes):
-#     """
-#     >>> matrixParens([(3,5), (5,4), (4,7)])
-#     144
-#     """
-#     pass
+############################################################################
+def matrixParens(s):
+    """
+    >>> matrixParens([(3,5), (5,4), (4,7)])
+    144
+    >>> matrixParens([(3,5), (5,4), (4,7)])
+    3600
+    """
+    # I'm not sure why, but following the above logic I got from office hours with Steven
+    # the final result is *way* higher than what the test case is showing. I've given both
+    # tests of what Steven says it should be and what I was getting.
+    memo = [[0 for x in range(len(s))] for z in range(len(s))]
+    memo2 = []
+
+    for i in range(len(memo)):
+        for j in range(len(memo[i])):
+            if i == j:
+                memo[i][j] = 0
+            else:
+                if i+1 < len(s):
+                    memo[i][j] = s[i][0] * s[i+1][0] * s[i+1][1]
+                    if i+2 < len(s):
+                        if [s[i][0]]+[s[i+1][0]]+[s[i+2][0]] not in memo2:
+                            memo2 += [[s[i][0]]+[s[i+1][0]]+[s[i+2][0]]]
+                            memo2 += [[s[i][0]]+[s[i+1][1]]+[s[i+2][1]]]
+                        
+            if i == len(memo)-1 and j == len(memo[i])-1:
+                memo[0][-1] = min(max(memo[0])*math.prod(memo2[0]), \
+                                  max(memo[1])*math.prod(memo2[-1]))
+    # bestsolution = 
+    return memo[0][-1]
 
 
 
