@@ -35,7 +35,7 @@ def schedule(jobs):
     #         else:
     #             i += 1
 
-    # comback to this
+    # comback to this - recursive soln - keeping track of a seen
     # while ???
             
     return sched
