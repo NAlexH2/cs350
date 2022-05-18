@@ -222,7 +222,7 @@ def matrixParens(s):
     # AB*C = 60+(3*5*4) = 120 <-
     # A*BC = 140+(3*4*7) = 224
     memo = [[0 for x in range(len(s))] for z in range(len(s))]
-    memo2 = []
+    memo2 = [] #holds the final matricies used in AB*C or A*BC
 
     for i in range(len(memo)):
         for j in range(len(memo[i])):
