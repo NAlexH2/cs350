@@ -13,31 +13,31 @@
 # Give a greedy algorithm to schdule the jobs on the fewest
 # number of processors total
 #
-# Running Time:
+# Running Time: Theta(n^2)
 #
 ################################################################
+
+from numpy import sort
+
 
 def schedule(jobs):
     """
     >>> schedule([(5,40), (30,35), (6,20), (19, 31), (23, 29), (28, 32)])
     [[(6, 20), (23, 29), (30, 35)], [(19, 31)], [(28, 32)], [(5, 40)]]
     """
+    # sorts into => [(6, 20), (23, 29), (19, 31), (28, 32), (30, 35), (5, 40)]
     sched = []
-    checker = []
     i = 0
     seen = [False] * len(jobs)
-    # while jobs is not None:
-    #     checker.append(jobs.pop())
-    #     while i < len(jobs):
-    #         if checker[0][1] > jobs[i][0] and jobs[i][1] < checker[0][1]:
-    #             sched.append(checker.pop())
-    #             i += 1
-    #         else:
-    #             i += 1
-
-    # comback to this - recursive soln - keeping track of a seen
-    # while ???
-            
+    jobs.sort(key = lambda x: x[1])
+    for i in range(len(seen)):
+        if seen[i] == False:
+            sched.append([jobs[i]])
+            seen[i] = True
+            for j in range(len(jobs)):
+                if seen[j] == False and jobs[j][1] > sched[-1][-1][1] and jobs[j][0] > sched[-1][-1][1]:
+                    sched[-1].append(jobs[j])
+                    seen[j] = True
     return sched
 
 ################################################################
@@ -58,7 +58,10 @@ def superstring(strings):
     >>> superstring(["CADBC", "CDAABD", "BCDA", "DDCA", "ADBCADC"])
     'BCDAABDDCADBCADC'
     """
-    pass
+    supa = ''
+    
+    
+    return supa
 
 ################################################################
 # Problem 3
@@ -71,22 +74,22 @@ def superstring(strings):
 ################################################################
 
 
-def dijkstra(g, a, b):
-    """
-    >>> g = [ [(1,3), (2,6)], \
-              [(0,3), (4,4)], \
-              [(0,6), (3,2), (5,7)], \
-              [(2,2), (4,4), (8,1)], \
-              [(1,4), (3,4), (6,9)], \
-              [(2,7), (6,2), (7,8)], \
-              [(4,9), (5,2), (9,4)], \
-              [(5,8), (8,3)], \
-              [(3,1), (7,3), (9,2)], \
-              [(6,4), (8,2)] ]
-    >>> dijkstra(g,0,9)
-    [0, 2, 3, 8, 9]
-    """
-    pass
+# def dijkstra(g, a, b):
+#     """
+#     >>> g = [ [(1,3), (2,6)], \
+#               [(0,3), (4,4)], \
+#               [(0,6), (3,2), (5,7)], \
+#               [(2,2), (4,4), (8,1)], \
+#               [(1,4), (3,4), (6,9)], \
+#               [(2,7), (6,2), (7,8)], \
+#               [(4,9), (5,2), (9,4)], \
+#               [(5,8), (8,3)], \
+#               [(3,1), (7,3), (9,2)], \
+#               [(6,4), (8,2)] ]
+#     >>> dijkstra(g,0,9)
+#     [0, 2, 3, 8, 9]
+#     """
+#     pass
 
 
 if __name__ == "__main__":
