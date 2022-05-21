@@ -17,6 +17,7 @@
 #
 ################################################################
 
+from multiprocessing.connection import wait
 from numpy import sort
 
 
@@ -57,11 +58,42 @@ def superstring(strings):
     """
     >>> superstring(["CADBC", "CDAABD", "BCDA", "DDCA", "ADBCADC"])
     'BCDAABDDCADBCADC'
+    >>> superstring(["catg", "ctaagt", "gcta", "ttca", "atgcatc"])
+    'gctaagttcatgcatc'
+    >>> superstring(["Tough", "questions", "asked"])
+    'Toughquestionsasked'
     """
-    supa = ''
+    sts = strings
+    used = [False] * len(sts)
+    supa = ""
+    sizematch = 0
     
     
-    return supa
+    
+    # print(f"{sts}, {used}, {supa}")
+    
+    # It works, but doesn't produce the exact string from the test.
+    # In some cases finds an even shorter super string that's still valid.
+    for i in range(len(sts)):
+        if sts[i] != None:
+            for j in range(len(sts[i])):
+                for k in range(len(sts)):
+                    if k != i and sts[k] != None:
+                        for l in range(len(sts[k])):
+                            if sts[i][j] == sts[k][l]:
+                                sizematch += 1
+                            if j == len(sts[i])-1 or l == len(sts[k])-1:
+                                if sizematch > 0:
+                                    sts[i] = sts[i] + sts[k][sizematch:]
+                                    sts[k] = None
+                                    sizematch = 0
+                                else:
+                                    sts[i] = sts[i] + sts[k]
+                                    sts[k] = None
+                                    sizematch = 0
+    print(sts) 
+    
+    return sts[0]
 
 ################################################################
 # Problem 3
@@ -72,8 +104,6 @@ def superstring(strings):
 #
 # Running time:
 ################################################################
-
-
 # def dijkstra(g, a, b):
 #     """
 #     >>> g = [ [(1,3), (2,6)], \
@@ -89,6 +119,7 @@ def superstring(strings):
 #     >>> dijkstra(g,0,9)
 #     [0, 2, 3, 8, 9]
 #     """
+#     0 => 
 #     pass
 
 
