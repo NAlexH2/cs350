@@ -115,6 +115,10 @@ def dijkstra(g, a, b):
     
     path = []
     path.append(a)
+    theset = set()
+    # start at 0, add to the set, visit it's neighbors and make those neighbors weights the added value from weight.first + weight.second => weight.third
+    # do this for all neighbors until all nodes have been visited
+    # pick smallest sum along the path <- how to decide this? Smallest weight inside of final node?
     # for i in range(len(g)):
         
     
