@@ -58,7 +58,7 @@ def kruskal(g):
             print(w,u,v)
             print(sets)
             # sets[s[v]].union(sets[s[u]]) <- not recommended for union
-            sets[s[v]] |= (sets[s[u]]) # |= is the UNION operator
+            sets[s[v]] |= (sets[s[u]]) # |= is the UNION and assign operator
             for x in sets[s[u]]:
                 s[x] = s[v]
             tree.append((u,v))

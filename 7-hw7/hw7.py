@@ -2,7 +2,7 @@
 # Due: Week of 5/23
 # Name: Alex Harris
 
-
+import heapq
 
 ################################################################
 # Problem 1
@@ -48,7 +48,7 @@
 #
 # Use the approximation algorithm we gave in class.
 #
-# Running Time: O(n^4)
+# Running Time: O(n^3)
 #
 ################################################################
 
@@ -63,6 +63,23 @@
 #     """
 #     sts = strings
 
+# write a function to find the overlap between strings
+# in both directions (front end and back end)
+# send back as a list w/ overlap and thet strings overlap
+# store that in a list and search for the max in the list, save that index
+# use that index to replace either string in the list and set the other to None
+# or remove it/pop
+# maybe use a set to keep track of what has already been used.
+# or seen/visited true/false array
+# 
+# Other notes from line 67:
+# then a function iterate over all combos of strings in the loop 
+# and print them out
+# continue to solve from there (return the strings combined together)
+# Do bits an pieces man, that's all.
+
+
+# run over and over the list until the smallest common super string 
 
 #     used = [False] * len(sts)
 #     sizematch = 0
@@ -97,7 +114,7 @@
 #
 # Running time: O((V+E) * p(v))
 ################################################################
-def dijkstra(g, a, b):
+def dijkstra(g, u, v):
     """
     >>> g = [ [(1,3), (2,6)], \
               [(0,3), (4,4)], \
@@ -114,17 +131,19 @@ def dijkstra(g, a, b):
     """
     
     path = []
-    path.append(a)
-    theset = set()
-    # start at 0, add to the set, visit it's neighbors and make those neighbors weights the added value from weight.first + weight.second => weight.third
-    # do this for all neighbors until all nodes have been visited
-    # pick smallest sum along the path <- how to decide this? Smallest weight inside of final node?
-    # for i in range(len(g)):
-        
-    
-    
-    return path
-
+    # path.append(a)
+    # visited = set()
+    # visited |= set(path)
+    # for u in range(len(g)):
+    #         visited = visited | {u}
+    # use heap, store the vertex in the heap by the weight as a touple 
+    # (node, weight)
+    # where the weight is the graph up to that node (v)
+    # only looking at the first thing in the heap to get the least possible
+    # weight on the path.
+    # as added to the heap, add to the path
+    thisheap = heapq()
+     
 
 if __name__ == "__main__":
     import doctest
