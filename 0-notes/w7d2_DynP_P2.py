@@ -89,7 +89,7 @@ def LCS(s,t):
 
     
 ####Subset Sum
-##Find some subset of ints that add up to target T
+##Find sum subset of ints that add up to target T
 def subsetSum(xs, i):
     '''Didn't have time for this one'''
     pass
