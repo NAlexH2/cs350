@@ -2,12 +2,7 @@
 # Due: Week of 5/23
 # Name: Alex Harris
 
-from audioop import reverse
 import heapq as hq
-from multiprocessing.connection import wait
-from operator import index
-
-from numpy import append
 
 ################################################################
 # Problem 1
