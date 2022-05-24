@@ -20,26 +20,25 @@ from multiprocessing.connection import wait
 ################################################################
 
 
-# def schedule(jobs):
-#     """
-#     >>> schedule([(5,40), (30,35), (6,20), (19, 31), (23, 29), (28, 32)])
-#     [[(6, 20), (23, 29), (30, 35)], [(19, 31)], [(28, 32)], [(5, 40)]]
-#     """
-#     # sorts into => [(6, 20), (23, 29), (19, 31), (28, 32), (30, 35), (5, 40)]
-#     sched = []
-#     i = 0
-#     seen = [False] * len(jobs)
-#     jobs.sort(key = lambda x: x[1])
-#     for i in range(len(seen)):
-#         if seen[i] == False:
-#             sched.append([jobs[i]])
-#             seen[i] = True
-#             for j in range(len(jobs)):
-#                if seen[j] == False and jobs[j][1] > sched[-1][-1][1] /
-#                   and jobs[j][0] > sched[-1][-1][1]:
-#                     sched[-1].append(jobs[j])
-#                     seen[j] = True
-#     return sched
+def schedule(jobs):
+    """
+    >>> schedule([(5,40), (30,35), (6,20), (19, 31), (23, 29), (28, 32)])
+    [[(6, 20), (23, 29), (30, 35)], [(19, 31)], [(28, 32)], [(5, 40)]]
+    """
+    # sorts into => [(6, 20), (23, 29), (19, 31), (28, 32), (30, 35), (5, 40)]
+    sched = []
+    i = 0
+    seen = [False] * len(jobs)
+    jobs.sort(key = lambda x: x[1])
+    for i in range(len(seen)):
+        if seen[i] == False:
+            sched.append([jobs[i]])
+            seen[i] = True
+            for j in range(len(jobs)):
+               if seen[j] == False and jobs[j][1] > sched[-1][-1][1] and jobs[j][0] > sched[-1][-1][1]:
+                    sched[-1].append(jobs[j])
+                    seen[j] = True
+    return sched
 
 ################################################################
 # Problem 2
@@ -56,109 +55,96 @@ from multiprocessing.connection import wait
 def overlap(str1, str2, cstr):
     # cstr is common string - str1 + str2 or str2 + str1 depedning on the result
     # of the loops
-    overlap = 0
-    len1 = len(str1)
-    len2 = len(str2)
+    overlap = 0 # count the overlaps that occur based on i loops
+    len1 = len(str1) # shrink down typing
+    len2 = len(str2) # same
     
+    # if the last part of str1 lines up with the first part of str2
     for i in range(min(len1, len2)):
         if str1[len1-i:] == str2[:i]:
             if overlap < i:
                 overlap = i
                 cstr = [str1 + str2[overlap:]]
     
+    # if the first part of str1 linues up with the last part of str2
     for i in range(min(len1, len2)):
         if str1[:i] == str2[len2-i:]:
             if overlap < i:
                 overlap = i
                 cstr = [str2 + str1[overlap:]]
 
+    #it turns out I didn't need to append, but if I change this it will 
+    # change the rest of the codes logic and break it.
     cstr.append(overlap)
     return cstr
 
-# def moreoverlaps(sts, ovl):
-#     for i in 
-
 def superstring(strings):
     """
+    >>> superstring(["CADBC", "CDAABD", "BCDA", "DDCA", "ADBCADC"])
+    'BCDAABDDCADBCADC'
     >>> superstring(["catg", "ctaagt", "gcta", "ttca", "atgcatc"])
     'gctaagttcatgcatc'
+    >>> superstring(["Tough", "questions", "asked"])
+    'Toughquestionsasked'
     """
-    sts = strings
+    sts = strings # shorthand strings
+    ovl = [] # track the overlapped word
+    sss = set() # use a set to see if we've made words before
+    
+    # track the word and its largest overlap size that occured. 
+    # -999 used as a nuclear option
+    largestyet = ['', 999*-1] 
+    sSize = len(strings) # used to ensure we've done the loops enough times
+    # to check every possibility
+    
+    first = last = 0 # used if largestyet[1] never got a value bigger than 0
 
-    # holding onto two possible overlapping strings to run through
-    # every permutation of the list to see the next most common overlap....?
-    ovl = []
-    scss = ''
-    largestyet = ['',0]
-    sSize = len(strings)
 
-# write a function to find the overlap between strings
-# in both directions (front end and back end)
-# send back as a list w/ overlap and thet strings overlap
-# store that in a list and search for the max in the list, save that index
-# use that index to replace either string in the list and set the other to None
-# or remove it/pop
-# maybe use a set to keep track of what has already been used.
-# or seen/visited true/false array
-# 
-# then a function iterate over all combos of strings in the loop 
-# and print them out
-# continue to solve from there (return the strings combined together)
-# Do bits an pieces man, that's all.
-
-    while sSize != 0:
+    # While we haven't visited every single spot
+    while sSize > 1:
+        sSize -= 1 # We've started being at a spot, so one less to go.
+        
+        # loop through the list
         for i in range(len(sts)):
-            # Start j at the next string in the list so we aren't double checking
-            # i forever possibly
-            if sts[i] != None:
+                # loop through the list starting at i + 1
                 for j in range(i+1, len(sts)):
-                    if sts[i] != None and sts[j] != None:
+                    
+                        # Deduce our overlaps if any
                         ovl = overlap(sts[i], sts[j], [])
-                        if len(ovl) > 1 and ovl[1] > largestyet[1]:
+                        # if ovl got more than it bargained for...
+                        if len(ovl) > 1 and ovl[1] > largestyet[1] and ovl[0] not in sss:
+                            # Hold on to that thing for dear life
                             largestyet[0] = ovl[0]
                             largestyet[1] = ovl[1]
-                            print(largestyet, sts[i], sts[j], ovl)
-                            over2(sts,largestyet[0])
-                        # elif len(ovl) == 1:
-                        #     if sts[i] not in scss:
-                        #         scss += sts[i]
-                        #     if sts[j] not in scss:
-                        #         scss += sts[j]
-                        #     sts[j] = scss
-                        #     print(largestyet, sts[i], sts[j], ovl)
-        sSize -= 1:
-                
-    return largestyet
+                            
+                        # Otherwise, just like track the two things we're
+                        # at in the loop in the event we leave early and gotta
+                        # make stuff work
+                        if len(ovl) == 1:
+                            first = i
+                            last = j
 
-def over2(sts, ly):
-    
-
-
-# run over and over the list until the smallest common super string 
-
-#     used = [False] * len(sts)
-#     sizematch = 0
-    
-#     # It works, but doesn't produce the exact string from the test.
-#     # In some cases finds an even shorter super string that's still valid.
-#     for i in range(len(sts)):
-#         if sts[i] != None:
-#             for j in range(len(sts[i])):
-#                 for k in range(len(sts)):
-#                     if k != i and sts[k] != None:
-#                         for l in range(len(sts[k])):
-#                             if sts[i][j] == sts[k][l]:
-#                                 sizematch += 1
-#                             if j == len(sts[i])-1 or l == len(sts[k])-1:
-#                                 if sizematch > 0:
-#                                     sts[i] = sts[i] + sts[k][sizematch:]
-#                                     sts[k] = None
-#                                     sizematch = 0
-#                                 else:
-#                                     sts[i] = sts[i] + sts[k]
-#                                     sts[k] = None
-#                                     sizematch = 0              
-#     return sts[0]
+        # The magic! Largestyet does have a value larger than 0 in it's 1st ind
+        # so we want to set strings 0th index to it and re-traverse all over
+        # again when we're done here. We also want to add largestyet to our
+        # superstringset set just to ensure any future largestyets are not
+        # evaluated.
+        if largestyet[1] > 0:
+            sts[0] = largestyet[0]
+            sss |= {largestyet[0]}
+            largestyet = ['', 999*-1] # reset, might have more loops to do
+            
+        # Otherwise, it turns out we never got a largest yet so there wasn't a
+        # single overlap for our strings 0th index at all
+        else:
+            if sts[first] not in sts[0]:
+                sts[0] += sts[first]
+            if sts[last] not in sts[0]:
+                sts[0] += sts[last]
+            sss |= {sts[0]}
+            
+    # Send it home
+    return sts[0]
 
 ################################################################
 # Problem 3
