@@ -2,8 +2,12 @@
 # Due: Week of 5/23
 # Name: Alex Harris
 
-import heapq
+from audioop import reverse
+import heapq as hq
 from multiprocessing.connection import wait
+from operator import index
+
+from numpy import append
 
 ################################################################
 # Problem 1
@@ -155,36 +159,72 @@ def superstring(strings):
 #
 # Running time: O((V+E) * p(v))
 ################################################################
-# def dijkstra(g, u, v):
-#     """
-#     >>> g = [ [(1,3), (2,6)], \
-#               [(0,3), (4,4)], \
-#               [(0,6), (3,2), (5,7)], \
-#               [(2,2), (4,4), (8,1)], \
-#               [(1,4), (3,4), (6,9)], \
-#               [(2,7), (6,2), (7,8)], \
-#               [(4,9), (5,2), (9,4)], \
-#               [(5,8), (8,3)], \
-#               [(3,1), (7,3), (9,2)], \
-#               [(6,4), (8,2)] ]
-#     >>> dijkstra(g,0,9)
-#     [0, 2, 3, 8, 9]
-#     """
+def dijkstra(g, a, b):
+    """
+    >>> g = [ [(1,3), (2,6)], \
+              [(0,3), (4,4)], \
+              [(0,6), (3,2), (5,7)], \
+              [(2,2), (4,4), (8,1)], \
+              [(1,4), (3,4), (6,9)], \
+              [(2,7), (6,2), (7,8)], \
+              [(4,9), (5,2), (9,4)], \
+              [(5,8), (8,3)], \
+              [(3,1), (7,3), (9,2)], \
+              [(6,4), (8,2)] ]
+    >>> dijkstra(g,0,9)
+    [0, 2, 3, 8, 9]
+    """
+    dist = [float('inf')] * (b+1) # dist = weight
+    dist[a] = 0 # set the initial starting position to 0 dist from itself
+    seen = [False] * (b+1) # Track our visits in the list
+    visitedQ = [(a,0)] # the heap to be used to traverse the graph
     
-    # path = []
-    # path.append(a)
-    # visited = set()
-    # visited |= set(path)
-    # for u in range(len(g)):
-    #         visited = visited | {u}
-    # use heap, store the vertex in the heap by the weight as a touple 
-    # (node, weight)
-    # where the weight is the graph up to that node (v)
-    # only looking at the first thing in the heap to get the least possible
-    # weight on the path.
-    # as added to the heap, add to the path
-    # thisheap = heapq()
-     
+    # dictates the parent node of the node we are currently at
+    pnode = [float('inf')] * (b+1)
+    
+    # While we have and are able to push items onto our visitedQ
+    while visitedQ:
+        
+        # Focus efforts one node at a time, take the one with the smallest
+        u = hq.heappop(visitedQ)
+        if seen[u[0]] != True: #[0] since I know that's my node
+            # mark it seen asap, we do not want to risk retraversal
+            seen[u[0]] = True
+            
+            # This is a bit interesting - for ever vertex in my graph at node
+            # u[0] (need to spec. index since it's a toupe at visitedQ)... 
+            for v in g[u[0]]:
+                
+            # make sure that we... 
+            # 1: haven't been here before
+            # 2: that the weight (dist) + weight of its neighbor 
+            # (the node we are currently evaluating against the parent) 
+            # is less than the parrent + current nodes value
+                if seen[v[0]] == False and dist[u[0]] + v[1] < dist[v[0]]:
+                    
+                    # store the dist on path u~v in a seperate location
+                    # at the current nodes index in dist
+                    dist[v[0]] = dist[u[0]] + v[1]
+                    # save the parent node of current node
+                    pnode[v[0]] = u[0] 
+                    
+                    # Push onto visitedQ the current node, and it's weight 
+                    # so that when we come back to the if, we have something
+                    # to evaluate.
+                    hq.heappush(visitedQ, (v[0], dist[v[0]]))
+                    
+    # This makepath will take any "b" and find the path to it via pnode. 
+    return makepath(pnode, b, [])
+
+def makepath(pn, pf, pnp):
+    # pn = parent node/pnode, f = parent finder, pnp = pnode path
+    if pf == float('inf'):
+        return
+    makepath(pn, pn[pf], pnp)
+    pnp.append(pf)
+    return pnp
+        
+
 
 if __name__ == "__main__":
     import doctest
