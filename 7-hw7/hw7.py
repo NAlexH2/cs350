@@ -53,7 +53,7 @@ def schedule(jobs):
 #
 # Use the approximation algorithm we gave in class.
 #
-# Running Time: O(n^3)
+# Running Time: O(n^(2*words))
 #
 ################################################################
 def overlap(str1, str2, cstr):
