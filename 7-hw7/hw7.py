@@ -3,6 +3,7 @@
 # Name: Alex Harris
 
 import heapq
+from multiprocessing.connection import wait
 
 ################################################################
 # Problem 1
@@ -34,7 +35,8 @@ import heapq
 #             sched.append([jobs[i]])
 #             seen[i] = True
 #             for j in range(len(jobs)):
-#                 if seen[j] == False and jobs[j][1] > sched[-1][-1][1] and jobs[j][0] > sched[-1][-1][1]:
+#                if seen[j] == False and jobs[j][1] > sched[-1][-1][1] /
+#                   and jobs[j][0] > sched[-1][-1][1]:
 #                     sched[-1].append(jobs[j])
 #                     seen[j] = True
 #     return sched
@@ -51,17 +53,44 @@ import heapq
 # Running Time: O(n^3)
 #
 ################################################################
+def overlap(str1, str2, cstr):
+    # cstr is common string - str1 + str2 or str2 + str1 depedning on the result
+    # of the loops
+    overlap = 0
+    len1 = len(str1)
+    len2 = len(str2)
+    
+    for i in range(min(len1, len2)):
+        if str1[len1-i:] == str2[:i]:
+            if overlap < i:
+                overlap = i
+                cstr = [str1 + str2[overlap:]]
+    
+    for i in range(min(len1, len2)):
+        if str1[:i] == str2[len2-i:]:
+            if overlap < i:
+                overlap = i
+                cstr = [str2 + str1[overlap:]]
 
-# def superstring(strings):
-#     """
-#     >>> superstring(["CADBC", "CDAABD", "BCDA", "DDCA", "ADBCADC"])
-#     'BCDAABDDCADBCADC'
-#     >>> superstring(["catg", "ctaagt", "gcta", "ttca", "atgcatc"])
-#     'gctaagttcatgcatc'
-#     >>> superstring(["Tough", "questions", "asked"])
-#     'Toughquestionsasked'
-#     """
-#     sts = strings
+    cstr.append(overlap)
+    return cstr
+
+# def moreoverlaps(sts, ovl):
+#     for i in 
+
+def superstring(strings):
+    """
+    >>> superstring(["catg", "ctaagt", "gcta", "ttca", "atgcatc"])
+    'gctaagttcatgcatc'
+    """
+    sts = strings
+
+    # holding onto two possible overlapping strings to run through
+    # every permutation of the list to see the next most common overlap....?
+    ovl = []
+    scss = ''
+    largestyet = ['',0]
+    sSize = len(strings)
 
 # write a function to find the overlap between strings
 # in both directions (front end and back end)
@@ -72,11 +101,37 @@ import heapq
 # maybe use a set to keep track of what has already been used.
 # or seen/visited true/false array
 # 
-# Other notes from line 67:
 # then a function iterate over all combos of strings in the loop 
 # and print them out
 # continue to solve from there (return the strings combined together)
 # Do bits an pieces man, that's all.
+
+    while sSize != 0:
+        for i in range(len(sts)):
+            # Start j at the next string in the list so we aren't double checking
+            # i forever possibly
+            if sts[i] != None:
+                for j in range(i+1, len(sts)):
+                    if sts[i] != None and sts[j] != None:
+                        ovl = overlap(sts[i], sts[j], [])
+                        if len(ovl) > 1 and ovl[1] > largestyet[1]:
+                            largestyet[0] = ovl[0]
+                            largestyet[1] = ovl[1]
+                            print(largestyet, sts[i], sts[j], ovl)
+                            over2(sts,largestyet[0])
+                        # elif len(ovl) == 1:
+                        #     if sts[i] not in scss:
+                        #         scss += sts[i]
+                        #     if sts[j] not in scss:
+                        #         scss += sts[j]
+                        #     sts[j] = scss
+                        #     print(largestyet, sts[i], sts[j], ovl)
+        sSize -= 1:
+                
+    return largestyet
+
+def over2(sts, ly):
+    
 
 
 # run over and over the list until the smallest common super string 
@@ -114,23 +169,23 @@ import heapq
 #
 # Running time: O((V+E) * p(v))
 ################################################################
-def dijkstra(g, u, v):
-    """
-    >>> g = [ [(1,3), (2,6)], \
-              [(0,3), (4,4)], \
-              [(0,6), (3,2), (5,7)], \
-              [(2,2), (4,4), (8,1)], \
-              [(1,4), (3,4), (6,9)], \
-              [(2,7), (6,2), (7,8)], \
-              [(4,9), (5,2), (9,4)], \
-              [(5,8), (8,3)], \
-              [(3,1), (7,3), (9,2)], \
-              [(6,4), (8,2)] ]
-    >>> dijkstra(g,0,9)
-    [0, 2, 3, 8, 9]
-    """
+# def dijkstra(g, u, v):
+#     """
+#     >>> g = [ [(1,3), (2,6)], \
+#               [(0,3), (4,4)], \
+#               [(0,6), (3,2), (5,7)], \
+#               [(2,2), (4,4), (8,1)], \
+#               [(1,4), (3,4), (6,9)], \
+#               [(2,7), (6,2), (7,8)], \
+#               [(4,9), (5,2), (9,4)], \
+#               [(5,8), (8,3)], \
+#               [(3,1), (7,3), (9,2)], \
+#               [(6,4), (8,2)] ]
+#     >>> dijkstra(g,0,9)
+#     [0, 2, 3, 8, 9]
+#     """
     
-    path = []
+    # path = []
     # path.append(a)
     # visited = set()
     # visited |= set(path)
@@ -142,7 +197,7 @@ def dijkstra(g, u, v):
     # only looking at the first thing in the heap to get the least possible
     # weight on the path.
     # as added to the heap, add to the path
-    thisheap = heapq()
+    # thisheap = heapq()
      
 
 if __name__ == "__main__":
