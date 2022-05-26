@@ -73,7 +73,8 @@ def overlap(str1, str2, cstr):
                 cstr = [str2 + str1[overlap:]]
 
     #it turns out I didn't need to append, but if I change this it will 
-    # change the rest of the codes logic and break it.
+    # change the rest of the codes logic and break the program. In a
+    # production based environment I'd fix this, but it's for school
     cstr.append(overlap)
     return cstr
 
@@ -207,6 +208,9 @@ def dijkstra(g, a, b):
                     # so that when we come back to the if, we have something
                     # to evaluate.
                     hq.heappush(visitedQ, (v[0], dist[v[0]]))
+
+                    # start the for loop over if there's more items at the
+                    # current node
                     
     # This makepath will take any "b" and find the path to it via pnode. 
     return makepath(pnode, b, [])
