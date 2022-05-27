@@ -60,6 +60,17 @@ def sudoku(board):
     >>> sudoku(board)
     [[4, 3, 5, 2, 6, 9, 7, 8, 1], [6, 8, 2, 5, 7, 1, 4, 9, 3], [1, 9, 7, 8, 3, 4, 5, 6, 2], [8, 2, 6, 1, 9, 5, 3, 4, 7], [3, 7, 4, 6, 8, 2, 9, 1, 5], [9, 5, 1, 7, 4, 3, 6, 2, 8], [5, 1, 9, 3, 2, 6, 8, 7, 4], [2, 4, 8, 9, 5, 7, 1, 3, 6], [7, 6, 3, 4, 1, 8, 2, 5, 9]]
     """
+    # https://anhminhtran235.github.io/sudoku-solver-visualizer/
+    # Have a function that gets the current row, another to get the current
+    # column, run through until we find a number that not in both lists (sets?) 
+    # then proceed when success. THEN verify it doesn't exist already in the 3x3.
+    # Want to proceed once we find a known good though, otherwise we go back one
+    # and increment and try again while our i != 9, if it hits 9, we roll back
+    # another and check again.
+    # Inspect that link above to really get an understanding of when to stop or
+    # to continue.
+    # Check 3x3 squares at the end though instead of when we get there? It feels
+    # like this should be done *while* we're in the 3x3 and the 9th position.
     pass
 
 if __name__ == "__main__":
