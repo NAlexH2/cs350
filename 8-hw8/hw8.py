@@ -71,7 +71,81 @@ def sudoku(board):
     # to continue.
     # Check 3x3 squares at the end though instead of when we get there? It feels
     # like this should be done *while* we're in the 3x3 and the 9th position.
-    pass
+    # k = 1
+    # i = j = 0
+    # while i in range(len(board)):
+    #     while j in range(len(board[i])):
+    #         if board[i][j] == 0:
+    #             while k < 9:
+    #                 if checkRowsColumns(board, i, j, k):
+    #                     board[i][j] = k
+    #                     k += 1
+    #                 if k == 9
+    #             k = 1
+    caught = sBoardrec(board, 0, 0, [])
+    return caught
+
+def sBoardrec(board, i, j, result):
+    if i > 8:
+        if checkBoard(board):
+            result = board
+            return result
+        return board
+    
+    elif j >= 9:
+        result = sBoardrec(board, i+1, 0, result)
+        if checkBoard(result):
+            return result
+        return sBoardrec(board, i+1, 0, result)
+    
+    if board[i][j] == 0:
+        for k in range(1,11):
+            if k == 10:
+                board[i][j] = 0
+                return board
+            elif not checkRowsColumns(board,i,j,k):
+                board[i][j] = k
+                result = sBoardrec(board, i, j+1, result)
+                if checkBoard(result):
+                    return result
+    
+    result = sBoardrec(board, i, j+1, result)
+    if checkBoard(result):
+        return result
+    
+    return result
+
+
+def checkRowsColumns(board, r, c, number):
+    # check the rows, the columns, using your current number to insert
+    # r = current row, c = current column, number = number to see if in either
+    rows = []
+    columns = []
+    for i in range(len(board[r])):
+        rows.append(board[r][i])
+    
+    for i in range (len(board)):
+        columns.append(board[i][c])
+    
+    if number in rows or number in columns:
+        return True #meaning that the number existed in either r or c
+
+    return False #Number was not found in either row or column
+
+def checkBoard(board):
+    for i in range(0, 9, 3):
+        for j in range(0, 9, 3):
+            current3x3 = []
+            for k in range(i, i+3):
+                for l in range(j, j+3):
+                    if board[k][l] == 0:
+                        return False
+                    if board[k][l] != 0:
+                        if board[k][l] in current3x3:
+                            return False
+                        else:
+                            current3x3.append(board[k][l])
+    return True
 
 if __name__ == "__main__":
     import doctest
