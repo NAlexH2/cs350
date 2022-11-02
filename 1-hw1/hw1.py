@@ -5,8 +5,6 @@
 
 # This homework is largely review, and to make sure you have a working version of python.
 
-from distutils.command.build_scripts import first_line_re
-
 
 from attr import NOTHING
 import math
